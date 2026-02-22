@@ -1,0 +1,1031 @@
+{
+  "info": {
+    "_postman_id": "analytics-dashboard-api",
+    "name": "Patient Health Analytics API",
+    "description": "Complete API collection for Patient Health Analytics Dashboard with all endpoints, authentication, and filter examples.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication & Setup",
+      "item": [
+        {
+          "name": "Login (Get Session)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "key": "Accept",
+                "value": "text/html,application/xhtml+xml"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "admin@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
+            },
+            "description": "Login to get session cookie. Use valid admin credentials."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "KPI & Statistics",
+      "item": [
+        {
+          "name": "1. Get All Patient Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ]
+            },
+            "description": "Get KPI metrics: total patients, gender distribution, average age, samples collected, referrals made."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Get Stats - Filtered by Gender",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats?gender=Male",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Male"
+                }
+              ]
+            },
+            "description": "Get stats filtered by gender (Male, Female, Other)"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get Stats - Filtered by Age Group",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats?age_group=31-45",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "age_group",
+                  "value": "31-45"
+                }
+              ]
+            },
+            "description": "Get stats by age group (0-17, 18-30, 31-45, 46-60, 60+)"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get Stats - Date Range Filter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats?date_from=2025-01-01&date_to=2025-12-31",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "date_from",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "date_to",
+                  "value": "2025-12-31"
+                }
+              ]
+            },
+            "description": "Get stats filtered by date range"
+          },
+          "response": []
+        },
+        {
+          "name": "5. Get Stats - Location Filter (Country+State)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats?country_id=1&state_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "country_id",
+                  "value": "1"
+                },
+                {
+                  "key": "state_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get stats filtered by country and state"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Registration Trends",
+      "item": [
+        {
+          "name": "1. Monthly Registration Trend",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/registration-trend?period=month",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "registration-trend"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "month"
+                }
+              ]
+            },
+            "description": "Get patient registration by month (last 12 months)"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Weekly Registration Trend",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/registration-trend?period=week",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "registration-trend"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "week"
+                }
+              ]
+            },
+            "description": "Get patient registration by week (last 12 weeks)"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Daily Registration Trend",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/registration-trend?period=day",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "registration-trend"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "day"
+                }
+              ]
+            },
+            "description": "Get patient registration by day (last 30 days)"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Trend - Filtered by Gender",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/registration-trend?period=month&gender=Female",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "registration-trend"
+              ],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "month"
+                },
+                {
+                  "key": "gender",
+                  "value": "Female"
+                }
+              ]
+            },
+            "description": "Get registration trend filtered by gender"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Demographics",
+      "item": [
+        {
+          "name": "1. All Demographics Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/demographics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "demographics"
+              ]
+            },
+            "description": "Get all demographics data: gender distribution, age groups, top villages, age by gender"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Demographics - By Country",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/demographics?country_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "demographics"
+              ],
+              "query": [
+                {
+                  "key": "country_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get demographics for specific country"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Demographics - By Country & State",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/demographics?country_id=1&state_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "demographics"
+              ],
+              "query": [
+                {
+                  "key": "country_id",
+                  "value": "1"
+                },
+                {
+                  "key": "state_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get demographics for country and state"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Demographics - Full Location Cascade",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/demographics?country_id=1&state_id=1&district_id=1&taluka_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "demographics"
+              ],
+              "query": [
+                {
+                  "key": "country_id",
+                  "value": "1"
+                },
+                {
+                  "key": "state_id",
+                  "value": "1"
+                },
+                {
+                  "key": "district_id",
+                  "value": "1"
+                },
+                {
+                  "key": "taluka_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get demographics with full location cascade filter"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health Metrics",
+      "item": [
+        {
+          "name": "1. All Health Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/health-metrics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "health-metrics"
+              ]
+            },
+            "description": "Get all health metrics: BP status, RBS levels, BMI analysis"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Health Metrics - Age 46-60",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/health-metrics?age_group=46-60",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "health-metrics"
+              ],
+              "query": [
+                {
+                  "key": "age_group",
+                  "value": "46-60"
+                }
+              ]
+            },
+            "description": "Get health metrics for age group 46-60"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Health Metrics - Male Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/health-metrics?gender=Male",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "health-metrics"
+              ],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Male"
+                }
+              ]
+            },
+            "description": "Get health metrics for male patients"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Health Metrics - Complex Filter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/health-metrics?gender=Female&age_group=31-45&date_from=2025-01-01&date_to=2025-12-31",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "health-metrics"
+              ],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Female"
+                },
+                {
+                  "key": "age_group",
+                  "value": "31-45"
+                },
+                {
+                  "key": "date_from",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "date_to",
+                  "value": "2025-12-31"
+                }
+              ]
+            },
+            "description": "Get health metrics with multiple filters"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lab & Diagnostics",
+      "item": [
+        {
+          "name": "1. All Lab & Diagnostics Data",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/lab-diagnostics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "lab-diagnostics"
+              ]
+            },
+            "description": "Get all lab and diagnostics data: diagnoses, lab tests, sample collection status"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Lab Data - Filtered by Gender",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/lab-diagnostics?gender=Female",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "lab-diagnostics"
+              ],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Female"
+                }
+              ]
+            },
+            "description": "Get lab data filtered by gender"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Treatment Analytics",
+      "item": [
+        {
+          "name": "1. All Treatment Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/treatment-analytics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "treatment-analytics"
+              ]
+            },
+            "description": "Get all treatment analytics: medications, treatment duration"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Treatment - Filtered by Age Group",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/treatment-analytics?age_group=60+",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "treatment-analytics"
+              ],
+              "query": [
+                {
+                  "key": "age_group",
+                  "value": "60+"
+                }
+              ]
+            },
+            "description": "Get treatment analytics for age 60+"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Patient List",
+      "item": [
+        {
+          "name": "1. Get All Patients (Page 1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/patients?page=1&per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get paginated patient list (20 records per page)"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Get Patients - Page 2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/patients?page=2&per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get second page of patients"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get Patients - Filtered by Gender",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/patients?page=1&per_page=20&gender=Male",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                },
+                {
+                  "key": "gender",
+                  "value": "Male"
+                }
+              ]
+            },
+            "description": "Get male patients only"
+          },
+          "response": []
+        },
+        {
+          "name": "4. Get Patients - Complex Filter",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/patients?page=1&per_page=20&gender=Female&age_group=31-45&country_id=1&state_id=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                },
+                {
+                  "key": "gender",
+                  "value": "Female"
+                },
+                {
+                  "key": "age_group",
+                  "value": "31-45"
+                },
+                {
+                  "key": "country_id",
+                  "value": "1"
+                },
+                {
+                  "key": "state_id",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Get patients with multiple filters"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Location Cascade",
+      "item": [
+        {
+          "name": "1. Get States for Country",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/states/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "states",
+                "1"
+              ]
+            },
+            "description": "Get list of states for country ID 1"
+          },
+          "response": []
+        },
+        {
+          "name": "2. Get Districts for State",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/districts/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "districts",
+                "1"
+              ]
+            },
+            "description": "Get list of districts for state ID 1"
+          },
+          "response": []
+        },
+        {
+          "name": "3. Get Talukas for District",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/talukas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "talukas",
+                "1"
+              ]
+            },
+            "description": "Get list of talukas for district ID 1"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://yourdomain.com",
+      "type": "string"
+    }
+  ]
+}

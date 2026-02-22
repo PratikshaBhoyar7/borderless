@@ -1,0 +1,572 @@
+{
+  "info": {
+    "_postman_id": "borderless-analytics-api",
+    "name": "Borderless Analytics API",
+    "description": "Complete API collection for Borderless Patient Health Analytics",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@admin.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login with email and password to get authenticated session"
+          }
+        },
+        {
+          "name": "Check Authentication Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/check",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "check"
+              ]
+            },
+            "description": "Check if currently authenticated"
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/me",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Get current authenticated user details"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Logout current user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics - Statistics",
+      "item": [
+        {
+          "name": "Get Stats (No Filters)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ]
+            },
+            "description": "Get patient statistics without filters"
+          }
+        },
+        {
+          "name": "Get Stats (Gender Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats?gender=Male",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Male"
+                }
+              ]
+            },
+            "description": "Get patient statistics filtered by gender"
+          }
+        },
+        {
+          "name": "Get Stats (Age Group Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats?age_group=31-45",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "age_group",
+                  "value": "31-45"
+                }
+              ]
+            },
+            "description": "Get patient statistics filtered by age group"
+          }
+        },
+        {
+          "name": "Get Stats (Date Range Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/stats?date_from=2025-01-01&date_to=2025-03-31",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "date_from",
+                  "value": "2025-01-01"
+                },
+                {
+                  "key": "date_to",
+                  "value": "2025-03-31"
+                }
+              ]
+            },
+            "description": "Get patient statistics filtered by date range"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics - Demographics",
+      "item": [
+        {
+          "name": "Get Demographics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/demographics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "demographics"
+              ]
+            },
+            "description": "Get demographic data (gender, age groups, villages)"
+          }
+        },
+        {
+          "name": "Get Demographics (Gender Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/demographics?gender=Female",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "demographics"
+              ],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Female"
+                }
+              ]
+            },
+            "description": "Get demographic data filtered by gender"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics - Health Metrics",
+      "item": [
+        {
+          "name": "Get Health Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/health-metrics",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "health-metrics"
+              ]
+            },
+            "description": "Get health metrics (BP, RBS, BMI)"
+          }
+        },
+        {
+          "name": "Get Health Metrics (Age 60+)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/health-metrics?age_group=60%2B",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "health-metrics"
+              ],
+              "query": [
+                {
+                  "key": "age_group",
+                  "value": "60+"
+                }
+              ]
+            },
+            "description": "Get health metrics filtered for 60+ age group"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics - Patients",
+      "item": [
+        {
+          "name": "Get Patients (Page 1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/patients?page=1&per_page=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get patients list - page 1"
+          }
+        },
+        {
+          "name": "Get Patients (Page 2)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/patients?page=2&per_page=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "2"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get patients list - page 2"
+          }
+        },
+        {
+          "name": "Get Patients (Gender Filter)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/patients?gender=Female&page=1&per_page=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "patients"
+              ],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Female"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get female patients list"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics - Location Cascade",
+      "item": [
+        {
+          "name": "Get States",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/states/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "states",
+                "1"
+              ]
+            },
+            "description": "Get states for country ID 1"
+          }
+        },
+        {
+          "name": "Get Districts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/districts/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "districts",
+                "1"
+              ]
+            },
+            "description": "Get districts for state ID 1"
+          }
+        },
+        {
+          "name": "Get Talukas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/analytics/api/talukas/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "admin",
+                "analytics",
+                "api",
+                "talukas",
+                "1"
+              ]
+            },
+            "description": "Get talukas for district ID 1"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8001",
+      "type": "string"
+    }
+  ]
+}

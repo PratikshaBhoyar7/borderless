@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Analytics Dashboard | Borderless World Foundation</title>
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://lightgreen-flamingo-971297.hostingersite.com/front/analytics">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/images/fav/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/fav/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/fav/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/fav/apple-touch-icon.png">
+    <link rel="manifest" href="assets/images/fav/site.webmanifest">
+    
+    <meta name="description" content="Comprehensive health analytics dashboard for patient data analysis and reporting at Borderless World Foundation">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Analytics Dashboard CSS -->
+    <style>
+        /* Analytics Dashboard Specific Styles */
+        :root {
+            --primary: #2C3E50;
+            --secondary: #3498DB;
+            --accent: #E74C3C;
+            --success: #27AE60;
+            --warning: #F39C12;
+            --info: #2980B9;
+            --light: #ECF0F1;
+            --dark: #2C3E50;
+        }
+
+        .analytics-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 60px 0 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
+            opacity: 0.1;
+        }
+
+        .banner-breadcrumbs {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .breadcrumb-links {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            gap: 10px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .breadcrumb-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .breadcrumb-links a:hover {
+            opacity: 0.8;
+        }
+
+        .separator {
+            opacity: 0.6;
+        }
+
+        .analytics-container {
+            padding: 40px 0;
+            background: var(--light);
+        }
+
+        /* Status Banner */
+        .status-banner {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--success);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .user-info {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Message Container */
+        .message-container {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .message.success {
+            background: #D5EDDA;
+            color: #155724;
+            border-left: 4px solid var(--success);
+        }
+
+        .message.error {
+            background: #F8D7DA;
+            color: #721C24;
+            border-left: 4px solid var(--accent);
+        }
+
+        .message.info {
+            background: #D1ECF1;
+            color: #0C5460;
+            border-left: 4px solid var(--info);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Filters Section */
+        .filters-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 12px 15px;
+            border: 2px solid #E8E8E8;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-analytics {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .btn-analytics.primary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-analytics.primary:hover {
+            background: #2980B9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-analytics.secondary {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-analytics.secondary:hover {
+            background: #219653;
+            transform: translateY(-2px);
+        }
+
+        /* KPI Cards */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-top: 4px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+        }
+
+        .kpi-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 15px 0;
+            color: var(--primary);
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .kpi-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .chart-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .chart-container canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: #95A5A6;
+            font-size: 1rem;
+            gap: 15px;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ECF0F1;
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Table Card */
+        .table-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+
+        .table-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .analytics-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .analytics-table thead {
+            background: var(--light);
+        }
+
+        .analytics-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary);
+            border-bottom: 2px solid #E8E8E8;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .analytics-table td {
+            padding: 15px;
+            border-bottom: 1px solid #E8E8E8;
+            color: #555;
+        }
+
+        .analytics-table tbody tr:hover {
+            background: #F8F9FA;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 10px 20px;
+            background: var(--light);
+            color: var(--primary);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .pagination button.active {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            text-align: center;
+            color: #666;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        /* Console Log */
+        .console-log {
+            background: #1A1A1A;
+            color: #00FF00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #333;
+        }
+
+        .console-line {
+            margin-bottom: 8px;
+            padding: 4px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .console-line.info { color: #3498DB; }
+        .console-line.success { color: #27AE60; }
+        .console-line.error { color: #E74C3C; }
+        .console-line.warn { color: #F39C12; }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .analytics-banner {
+                padding: 40px 0 20px;
+            }
+            
+            .kpi-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .status-banner {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .filter-buttons {
+                width: 100%;
+            }
+            
+            .btn-analytics {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chart-card,
+            .table-card,
+            .filters-section {
+                padding: 20px;
+            }
+            
+            .kpi-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Mega Menu -->
+    <header>
+        <div class="container header-container">
+            <a href="/front" class="logo">
+                <img src="images/final-final-6.png" alt="Borderless World Foundation">
+            </a>
+
+            <div class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="/front">Home</a></li>
+                    <li class="has-mega-menu">
+                        <a href="about.php">About Us <i class="fas"></i></a>
+                    </li>
+                    <li class="has-mega-menu">
+                        <a href="project.php">Projects <i class="fas fa-chevron-down"></i></a>
+                        <div class="mega-menu" id="projectsMegaMenu">
+                            <!-- Projects will be dynamically loaded here -->
+                        </div>
+                    </li>
+                    <li><a href="achievements.php">Achievements</a></li>
+                    <li><a href="workarea.php">Work Area</a></li>
+                    <li><a href="gallery.php">Media</a></li>
+                    <li><a href="contact.php">Contact</a></li>
+                    <li><a href="analytics.php" class="active">Analytics</a></li>
+                </ul>
+
+                <a href="pay.php" class="btn btn-primary">Donate Now</a>
+
+                <div class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <div class="close-mobile-menu" id="closeMobileMenu">
+                <i class="fas fa-times"></i>
+            </div>
+            <ul class="mobile-nav-links">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="about.php">About</a></li>
+                <li class="mobile-dropdown">
+                    <a href="#" id="mobileProjectsDropdown">Projects <i class="fas fa-chevron-down"></i></a>
+                    <div class="mobile-dropdown-content" id="mobileProjectsDropdownContent">
+                        <!-- Projects will be dynamically loaded here -->
+                    </div>
+                </li>
+                <li><a href="achievements.php">Achievements</a></li>
+                <li><a href="workarea.php">Work Area</a></li>
+                <li><a href="gallery.php">Media</a></li>
+                <li><a href="contact.php">Contact</a></li>
+                <li><a href="analytics.php" class="active">Analytics</a></li>
+                <li><a href="pay.php" class="btn btn-primary" style="margin-top: 20px; display: block;">Donate Now</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Analytics Banner -->
+    <section class="analytics-banner">
+        <div class="container">
+            <div class="banner-content">
+                <div class="banner-text text-center">
+                    <h1>Health Analytics Dashboard</h1>
+                    <p>Comprehensive patient data analysis and health metrics reporting system</p>
+                </div>
+            </div>
+
+            <!-- Breadcrumbs -->
+            <div class="banner-breadcrumbs">
+                <ul class="breadcrumb-links">
+                    <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
+                    <li class="separator">/</li>
+                    <li>Analytics Dashboard</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Dashboard Content -->
+    <section class="analytics-container">
+        <div class="container">
+            <!-- Status Banner -->
+            <div class="status-banner" data-aos="fade-up">
+                <div class="status-indicator">
+                    <span class="indicator-dot"></span>
+                    <span id="statusText">Loading dashboard...</span>
+                </div>
+                <div class="user-info" id="userInfo"></div>
+            </div>
+
+            <!-- Message Container -->
+            <div class="message-container" id="messageContainer"></div>
+
+            <!-- Filters Section -->
+            <div class="filters-section" data-aos="fade-up">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="countryFilter"><i class="fas fa-globe"></i> Country</label>
+                        <select id="countryFilter" onchange="loadStates()">
+                            <option value="">All Countries</option>
+                            <option value="1">India</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="stateFilter"><i class="fas fa-map-marker-alt"></i> State</label>
+                        <select id="stateFilter" onchange="loadDistricts()">
+                            <option value="">All States</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="districtFilter"><i class="fas fa-map"></i> District</label>
+                        <select id="districtFilter">
+                            <option value="">All Districts</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="genderFilter"><i class="fas fa-user"></i> Gender</label>
+                        <select id="genderFilter">
+                            <option value="">All Genders</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="ageGroupFilter"><i class="fas fa-calendar-alt"></i> Age Group</label>
+                        <select id="ageGroupFilter">
+                            <option value="">All Age Groups</option>
+                            <option value="0-17">0-17</option>
+                            <option value="18-30">18-30</option>
+                            <option value="31-45">31-45</option>
+                            <option value="46-60">46-60</option>
+                            <option value="60+">60+</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateFromFilter"><i class="fas fa-calendar"></i> Date From</label>
+                        <input type="date" id="dateFromFilter">
+                    </div>
+                    <div class="filter-group">
+                        <label for="dateToFilter"><i class="fas fa-calendar"></i> Date To</label>
+                        <input type="date" id="dateToFilter">
+                    </div>
+                    <div class="filter-group filter-buttons">
+                        <button class="btn-analytics primary" onclick="applyFilters()">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                        <button class="btn-analytics secondary" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="kpi-section" id="kpiSection">
+                <!-- KPI cards will be loaded here -->
+                <div class="loading"><div class="spinner"></div>Loading KPIs...</div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <div class="chart-card" data-aos="fade-up">
+                    <h3><i class="fas fa-venus-mars"></i> Gender Distribution</h3>
+                    <div class="chart-container" id="genderChartContainer">
+                        <div class="loading"><div class="spinner"></div>Loading chart...</div>
+                    </div>
+                </div>
+                <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+                    <h3><i class="fas fa-users"></i> Age Group Distribution</h3>
+                    <div class="chart-container" id="ageChartContainer">
+                        <div class="loading"><div class="spinner"></div>Loading chart...</div>
+                    </div>
+                </div>
+                <div class="chart-card" data-aos="fade-up" data-aos-delay="200">
+                    <h3><i class="fas fa-heartbeat"></i> Blood Pressure Status</h3>
+                    <div class="chart-container" id="bpChartContainer">
+                        <div class="loading"><div class="spinner"></div>Loading chart...</div>
+                    </div>
+                </div>
+                <div class="chart-card" data-aos="fade-up" data-aos-delay="300">
+                    <h3><i class="fas fa-tint"></i> RBS Levels</h3>
+                    <div class="chart-container" id="rbsChartContainer">
+                        <div class="loading"><div class="spinner"></div>Loading chart...</div>
+                    </div>
+                </div>
+                <div class="chart-card" data-aos="fade-up" data-aos-delay="400">
+                    <h3><i class="fas fa-weight"></i> BMI Analysis</h3>
+                    <div class="chart-container" id="bmiChartContainer">
+                        <div class="loading"><div class="spinner"></div>Loading chart...</div>
+                    </div>
+                </div>
+                <div class="chart-card" data-aos="fade-up" data-aos-delay="500">
+                    <h3><i class="fas fa-village"></i> Top Villages</h3>
+                    <div class="chart-container" id="villageChartContainer">
+                        <div class="loading"><div class="spinner"></div>Loading chart...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patient Data Table -->
+            <div class="table-card" data-aos="fade-up">
+                <h3><i class="fas fa-user-injured"></i> Recent Patients</h3>
+                <div id="patientTableContainer">
+                    <div class="loading"><div class="spinner"></div>Loading patient data...</div>
+                </div>
+            </div>
+
+            <!-- System Log -->
+            <div class="console-log" id="consoleLog">
+                <div class="console-line info">[System] Analytics Dashboard Initialized</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Floating Icon -->
+    <a href="https://wa.me/919999999999?text=Hello%20Borderless%20World%20Foundation" target="_blank" class="whatsapp-float" title="Contact us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <a href="index.php" class="footer-logo">
+                        <img src="images/final-final-6.png" alt="Borderless World Foundation">
+                    </a>
+                    <p>Creating lasting change through education, healthcare and empowerment initiatives in conflict-affected regions of Jammu & Kashmir.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/borderlessworldfoundation" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.instagram.com/borderlessworldfoundation" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/channel/UCUAKXxzfdcOGFafovROt8jg" target="_blank"><i class="fab fa-youtube"></i></a>
+                        <a href="mailto:bwfindia@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="about.php">About Us</a></li>
+                        <li><a href="project.php">Projects</a></li>
+                        <li><a href="achievements.php">Achievements</a></li>
+                        <li><a href="workarea.php">Work Area</a></li>
+                        <li><a href="gallery.php">Media</a></li>
+                        <li><a href="analytics.php">Analytics</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Contact Info</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Tilak Road, Sadashiv Peth, Pune 411030</li>
+                        <li><i class="fas fa-envelope"></i> bwfindia@gmail.com</li>
+                        <li><i class="fas fa-phone"></i> Contact for more information</li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Support Our Cause</h3>
+                    <p>Your donation can transform lives in Jammu & Kashmir. Every contribution makes a difference.</p>
+                    <a href="pay.php" class="btn btn-primary" style="margin-top: 15px;">Donate Now</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>Copyright &copy; <span id="currentYear"></span> Borderless World Foundation. All Rights Reserved.</p>
+                <p style="margin-top: 10px; font-size: 0.8rem;">Registered under India's Societies Registration Act, 1860</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Analytics Dashboard JavaScript -->
+    <script>
+        // ==================== CONFIGURATION ====================
+        const CONFIG = {
+            BASE_URL: 'http://localhost:8000',
+            API_AUTH_LOGIN: '/api/auth/login',
+            API_AUTH_CHECK: '/api/auth/check',
+            API_STATS: '/api/analytics/stats',
+            API_DEMOGRAPHICS: '/api/analytics/demographics',
+            API_HEALTH_METRICS: '/api/analytics/health-metrics',
+            API_PATIENTS: '/api/analytics/patients',
+            API_STATES: '/api/analytics/states',
+            API_DISTRICTS: '/api/analytics/districts',
+            LOGIN_EMAIL: 'admin@admin.com',
+            LOGIN_PASSWORD: 'password',
+            TIMEOUT: 10000
+        };
+
+        // ==================== STATE MANAGEMENT ====================
+        const state = {
+            authenticated: false,
+            user: null,
+            api_token: localStorage.getItem('bwf_analytics_token'),
+            currentPage: 1,
+            chartInstances: {},
+            logs: [],
+            sessionValid: false
+        };
+
+        // ==================== LOGGING SYSTEM ====================
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = {
+                'info': 'ℹ',
+                'success': '✓',
+                'error': '✗',
+                'warn': '⚠'
+            }[type] || 'ℹ';
+
+            const logEntry = `[${timestamp}] ${prefix} ${message}`;
+            state.logs.push({ message: logEntry, type });
+
+            // Add to console log display
+            const consoleLog = document.getElementById('consoleLog');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = logEntry;
+            consoleLog.appendChild(line);
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+
+            // Also log to browser console
+            console[type === 'error' ? 'error' : type === 'warn' ? 'warn' : 'log'](logEntry);
+        }
+
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('messageContainer');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            messageEl.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            container.appendChild(messageEl);
+
+            setTimeout(() => {
+                messageEl.remove();
+            }, 5000);
+
+            log(message, type);
+        }
+
+        function updateStatus(text, status = 'loading') {
+            const statusText = document.getElementById('statusText');
+            const indicator = document.querySelector('.indicator-dot');
+            
+            statusText.textContent = text;
+            
+            if (status === 'authenticated') {
+                indicator.style.background = 'var(--success)';
+            } else if (status === 'error') {
+                indicator.style.background = 'var(--accent)';
+            } else {
+                indicator.style.background = 'var(--warning)';
+            }
+
+            if (state.user) {
+                document.getElementById('userInfo').innerHTML = `
+                    <i class="fas fa-user-circle"></i> ${state.user.email}
+                `;
+            }
+        }
+
+        // ==================== API HELPER ====================
+        async function fetchAPI(endpoint, options = {}) {
+            const defaults = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            };
+
+            const finalOptions = { ...defaults, ...options };
+
+            if (state.api_token) {
+                finalOptions.headers['Authorization'] = `Bearer ${state.api_token}`;
+            }
+
+            if (finalOptions.body && typeof finalOptions.body === 'object') {
+                finalOptions.body = JSON.stringify(finalOptions.body);
+            }
+
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), CONFIG.TIMEOUT);
+
+            try {
+                log(`API Request: ${endpoint}`, 'info');
+                const response = await fetch(CONFIG.BASE_URL + endpoint, {
+                    ...finalOptions,
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeout);
+
+                if (response.status === 401) {
+                    state.sessionValid = false;
+                    state.api_token = null;
+                    localStorage.removeItem('bwf_analytics_token');
+                    throw new Error('Session expired. Please login again.');
+                }
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${error.substring(0, 100)}`);
+                }
+
+                return await response.json();
+
+            } catch (error) {
+                clearTimeout(timeout);
+                if (error.name === 'AbortError') {
+                    throw new Error(`Request timeout after ${CONFIG.TIMEOUT}ms`);
+                }
+                throw error;
+            }
+        }
+
+        // ==================== AUTHENTICATION ====================
+        async function authenticate() {
+            try {
+                updateStatus('Authenticating...', 'loading');
+                log('Starting authentication process...', 'info');
+
+                // Check if we have a valid token
+                if (state.api_token) {
+                    log('Found existing token, validating...', 'info');
+                    try {
+                        const checkResult = await fetchAPI(CONFIG.API_AUTH_CHECK);
+                        if (checkResult.success) {
+                            state.user = checkResult.user;
+                            state.authenticated = true;
+                            state.sessionValid = true;
+                            log('✓ Token validated successfully', 'success');
+                            updateStatus('Authenticated', 'authenticated');
+                            showMessage(`Welcome back ${checkResult.user.email}`, 'success');
+                            return true;
+                        }
+                    } catch (error) {
+                        log(`Token invalid: ${error.message}`, 'warn');
+                    }
+                }
+
+                // Perform login to get new token
+                log('Getting new authentication token...', 'info');
+                const loginResult = await fetchAPI(CONFIG.API_AUTH_LOGIN, {
+                    method: 'POST',
+                    body: {
+                        email: CONFIG.LOGIN_EMAIL,
+                        password: CONFIG.LOGIN_PASSWORD
+                    }
+                });
+
+                if (!loginResult.success) {
+                    throw new Error(loginResult.message || 'Login failed');
+                }
+
+                // Store the API token
+                state.api_token = loginResult.token;
+                localStorage.setItem('bwf_analytics_token', loginResult.token);
+                state.authenticated = true;
+                state.user = loginResult.user;
+                state.sessionValid = true;
+
+                log('✓ Authentication successful', 'success');
+                updateStatus('Authenticated', 'authenticated');
+                showMessage(`Logged in as ${loginResult.user.email}`, 'success');
+
+                return true;
+
+            } catch (error) {
+                log(`Authentication failed: ${error.message}`, 'error');
+                updateStatus('Authentication Failed', 'error');
+                showMessage(`Authentication Error: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        // ==================== DATA LOADING FUNCTIONS ====================
+        async function loadKPIs() {
+            try {
+                const params = getFilterParams();
+                log('Loading KPI statistics...', 'info');
+                const data = await fetchAPI(CONFIG.API_STATS + formatParams(params));
+
+                const kpiData = [
+                    { label: 'Total Patients', value: data.total_patients || 0, color: '#3498DB' },
+                    { label: 'Male Patients', value: data.male_patients || 0, color: '#2980B9' },
+                    { label: 'Female Patients', value: data.female_patients || 0, color: '#E74C3C' },
+                    { label: 'Avg Age', value: data.avg_age ? data.avg_age.toFixed(1) : 'N/A', color: '#27AE60' },
+                    { label: 'Samples Collected', value: data.samples_collected || 0, color: '#F39C12' },
+                    { label: 'Referrals Made', value: data.referrals_made || 0, color: '#9B59B6' }
+                ];
+
+                const kpiSection = document.getElementById('kpiSection');
+                kpiSection.innerHTML = kpiData.map(kpi => `
+                    <div class="kpi-card" style="border-top-color: ${kpi.color}" data-aos="fade-up">
+                        <div class="kpi-label">${kpi.label}</div>
+                        <div class="kpi-value">${kpi.value}</div>
+                    </div>
+                `).join('');
+
+                log('✓ KPI data loaded successfully', 'success');
+
+            } catch (error) {
+                log(`Error loading KPIs: ${error.message}`, 'error');
+                showMessage(`Error loading statistics: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadDemographics() {
+            try {
+                const params = getFilterParams();
+                log('Loading demographic data...', 'info');
+                const data = await fetchAPI(CONFIG.API_DEMOGRAPHICS + formatParams(params));
+
+                // Gender Chart
+                if (data.gender && data.gender.length > 0) {
+                    createChart('genderChartContainer', 'doughnut', {
+                        labels: data.gender.map(d => d.sex),
+                        datasets: [{
+                            data: data.gender.map(d => d.count),
+                            backgroundColor: ['#3498DB', '#E74C3C', '#9B59B6'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                // Age Groups Chart
+                if (data.age_groups && data.age_groups.length > 0) {
+                    createChart('ageChartContainer', 'bar', {
+                        labels: data.age_groups.map(d => d.age_group),
+                        datasets: [{
+                            label: 'Count',
+                            data: data.age_groups.map(d => d.count),
+                            backgroundColor: '#27AE60',
+                            borderRadius: 8
+                        }]
+                    });
+                }
+
+                // Top Villages Chart
+                if (data.top_villages && data.top_villages.length > 0) {
+                    const villages = data.top_villages.slice(0, 10);
+                    createChart('villageChartContainer', 'horizontalBar', {
+                        labels: villages.map(d => d.village || 'Unknown'),
+                        datasets: [{
+                            label: 'Patients',
+                            data: villages.map(d => d.count),
+                            backgroundColor: '#F39C12',
+                            borderRadius: 8
+                        }]
+                    });
+                }
+
+                log('✓ Demographic data loaded', 'success');
+
+            } catch (error) {
+                log(`Error loading demographics: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadHealthMetrics() {
+            try {
+                const params = getFilterParams();
+                log('Loading health metrics...', 'info');
+                const data = await fetchAPI(CONFIG.API_HEALTH_METRICS + formatParams(params));
+
+                // BP Status
+                if (data.bp_status && data.bp_status.length > 0) {
+                    createChart('bpChartContainer', 'pie', {
+                        labels: data.bp_status.map(d => d.bp_status),
+                        datasets: [{
+                            data: data.bp_status.map(d => d.count),
+                            backgroundColor: ['#27AE60', '#F39C12', '#E74C3C'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                // RBS Levels
+                if (data.rbs_levels && data.rbs_levels.length > 0) {
+                    createChart('rbsChartContainer', 'pie', {
+                        labels: data.rbs_levels.map(d => d.rbs_status),
+                        datasets: [{
+                            data: data.rbs_levels.map(d => d.count),
+                            backgroundColor: ['#3498DB', '#9B59B6', '#E74C3C'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                // BMI Analysis
+                if (data.bmi_analysis && data.bmi_analysis.length > 0) {
+                    createChart('bmiChartContainer', 'doughnut', {
+                        labels: data.bmi_analysis.map(d => d.bmi_status),
+                        datasets: [{
+                            data: data.bmi_analysis.map(d => d.count),
+                            backgroundColor: ['#27AE60', '#3498DB', '#F39C12', '#E74C3C'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                log('✓ Health metrics loaded', 'success');
+
+            } catch (error) {
+                log(`Error loading health metrics: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadPatients(page = 1) {
+            try {
+                const params = { ...getFilterParams(), page, per_page: 10 };
+                log(`Loading patients page ${page}...`, 'info');
+                const data = await fetchAPI(CONFIG.API_PATIENTS + formatParams(params));
+
+                let html = `
+                    <table class="analytics-table">
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Village</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach(patient => {
+                        html += `
+                            <tr>
+                                <td><strong>${patient.patient_id || 'N/A'}</strong></td>
+                                <td>${patient.name || 'N/A'}</td>
+                                <td><span class="badge">${patient.sex || 'N/A'}</span></td>
+                                <td>${patient.age || 'N/A'}</td>
+                                <td>${patient.village || 'N/A'}</td>
+                                <td>${patient.date ? new Date(patient.date).toLocaleDateString() : 'N/A'}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    html += '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #95A5A6;">No patient records found</td></tr>';
+                }
+
+                html += `
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <button onclick="loadPatients(1)" ${page === 1 ? 'disabled' : ''}>
+                            <i class="fas fa-angle-double-left"></i> First
+                        </button>
+                        <button onclick="loadPatients(${page - 1})" ${page === 1 ? 'disabled' : ''}>
+                            <i class="fas fa-angle-left"></i> Previous
+                        </button>
+                        <button class="active">${page}</button>
+                        <button onclick="loadPatients(${page + 1})" ${page >= data.last_page ? 'disabled' : ''}>
+                            Next <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button onclick="loadPatients(${data.last_page})" ${page >= data.last_page ? 'disabled' : ''}>
+                            Last <i class="fas fa-angle-double-right"></i>
+                        </button>
+                    </div>
+                    <div class="pagination-info">
+                        Showing page ${data.current_page} of ${data.last_page} | Total ${data.total} records
+                    </div>
+                `;
+
+                document.getElementById('patientTableContainer').innerHTML = html;
+                log('✓ Patient data loaded', 'success');
+
+            } catch (error) {
+                log(`Error loading patients: ${error.message}`, 'error');
+                document.getElementById('patientTableContainer').innerHTML = `
+                    <div style="color: #E74C3C; padding: 30px; text-align: center; background: #FADBD8; border-radius: 8px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 15px;"></i>
+                        <p>Error loading patient data: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== CHART RENDERING ====================
+        function createChart(containerId, type, config) {
+            const container = document.getElementById(containerId);
+            const canvas = container.querySelector('canvas') || document.createElement('canvas');
+
+            if (!container.querySelector('canvas')) {
+                container.innerHTML = '';
+                container.appendChild(canvas);
+            }
+
+            if (state.chartInstances[containerId]) {
+                state.chartInstances[containerId].destroy();
+            }
+
+            const chartConfig = {
+                type: type === 'horizontalBar' ? 'bar' : type,
+                data: config,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: type === 'horizontalBar' ? 'y' : 'x',
+                    plugins: {
+                        legend: {
+                            display: ['pie', 'doughnut'].includes(type),
+                            position: 'bottom',
+                            labels: { 
+                                font: { family: 'Inter', size: 12 },
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: { family: 'Inter', size: 12 },
+                            bodyFont: { family: 'Inter', size: 12 },
+                            padding: 12
+                        }
+                    },
+                    scales: ['bar', 'horizontalBar'].includes(type) ? {
+                        y: { 
+                            beginAtZero: true, 
+                            ticks: { font: { family: 'Inter', size: 11 } },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        },
+                        x: { 
+                            ticks: { font: { family: 'Inter', size: 11 } },
+                            grid: { color: 'rgba(0,0,0,0.05)' }
+                        }
+                    } : {}
+                }
+            };
+
+            state.chartInstances[containerId] = new Chart(canvas, chartConfig);
+        }
+
+        // ==================== FILTER HELPERS ====================
+        function getFilterParams() {
+            const params = {};
+            const country = document.getElementById('countryFilter').value;
+            const stateVal = document.getElementById('stateFilter').value;
+            const district = document.getElementById('districtFilter').value;
+            const gender = document.getElementById('genderFilter').value;
+            const ageGroup = document.getElementById('ageGroupFilter').value;
+            const dateFrom = document.getElementById('dateFromFilter').value;
+            const dateTo = document.getElementById('dateToFilter').value;
+
+            if (country) params.country_id = country;
+            if (stateVal) params.state_id = stateVal;
+            if (district) params.district_id = district;
+            if (gender) params.gender = gender;
+            if (ageGroup) params.age_group = ageGroup;
+            if (dateFrom) params.date_from = dateFrom;
+            if (dateTo) params.date_to = dateTo;
+
+            return params;
+        }
+
+        function formatParams(params) {
+            const query = new URLSearchParams(params).toString();
+            return query ? '?' + query : '';
+        }
+
+        function applyFilters() {
+            showMessage('Applying filters and refreshing data...', 'info');
+            loadDashboard();
+        }
+
+        function resetFilters() {
+            document.getElementById('countryFilter').value = '';
+            document.getElementById('stateFilter').value = '';
+            document.getElementById('districtFilter').value = '';
+            document.getElementById('genderFilter').value = '';
+            document.getElementById('ageGroupFilter').value = '';
+            document.getElementById('dateFromFilter').value = '';
+            document.getElementById('dateToFilter').value = '';
+
+            clearStateOptions();
+            clearDistrictOptions();
+
+            showMessage('All filters have been reset', 'success');
+            loadDashboard();
+        }
+
+        // ==================== LOCATION FILTERS ====================
+        async function loadStates() {
+            try {
+                const countryId = document.getElementById('countryFilter').value;
+                const stateSelect = document.getElementById('stateFilter');
+
+                if (!countryId) {
+                    clearStateOptions();
+                    clearDistrictOptions();
+                    return;
+                }
+
+                log('Loading states for selected country...', 'info');
+                const data = await fetchAPI(CONFIG.API_STATES + '/' + countryId);
+
+                clearStateOptions();
+                if (data && Array.isArray(data)) {
+                    data.forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state.id;
+                        option.text = state.name;
+                        stateSelect.appendChild(option);
+                    });
+                    log(`✓ Loaded ${data.length} states`, 'success');
+                } else {
+                    log('No states found for selected country', 'warn');
+                }
+            } catch (error) {
+                log(`Error loading states: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadDistricts() {
+            try {
+                const stateId = document.getElementById('stateFilter').value;
+                const districtSelect = document.getElementById('districtFilter');
+
+                if (!stateId) {
+                    clearDistrictOptions();
+                    return;
+                }
+
+                log('Loading districts for selected state...', 'info');
+                const data = await fetchAPI(CONFIG.API_DISTRICTS + '/' + stateId);
+
+                clearDistrictOptions();
+                if (data && Array.isArray(data)) {
+                    data.forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district.id;
+                        option.text = district.name;
+                        districtSelect.appendChild(option);
+                    });
+                    log(`✓ Loaded ${data.length} districts`, 'success');
+                } else {
+                    log('No districts found for selected state', 'warn');
+                }
+            } catch (error) {
+                log(`Error loading districts: ${error.message}`, 'error');
+            }
+        }
+
+        function clearStateOptions() {
+            const stateSelect = document.getElementById('stateFilter');
+            while (stateSelect.options.length > 1) {
+                stateSelect.remove(1);
+            }
+            stateSelect.value = '';
+        }
+
+        function clearDistrictOptions() {
+            const districtSelect = document.getElementById('districtFilter');
+            while (districtSelect.options.length > 1) {
+                districtSelect.remove(1);
+            }
+            districtSelect.value = '';
+        }
+
+        // ==================== DASHBOARD LOADING ====================
+        async function loadDashboard() {
+            try {
+                log('Loading complete dashboard data...', 'info');
+                updateStatus('Loading dashboard data...', 'loading');
+                
+                await Promise.all([
+                    loadKPIs(),
+                    loadDemographics(),
+                    loadHealthMetrics(),
+                    loadPatients(state.currentPage)
+                ]);
+                
+                showMessage('Dashboard loaded successfully!', 'success');
+                updateStatus('Dashboard Ready', 'authenticated');
+                log('✓ Dashboard fully loaded and ready', 'success');
+                
+            } catch (error) {
+                log(`Dashboard error: ${error.message}`, 'error');
+                showMessage(`Error loading dashboard: ${error.message}`, 'error');
+                updateStatus('Error Loading Data', 'error');
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+        async function initialize() {
+            try {
+                log('Initializing Analytics Dashboard...', 'info');
+                updateStatus('Initializing...', 'loading');
+                
+                // Initialize AOS animations
+                AOS.init({
+                    duration: 600,
+                    once: true,
+                    offset: 100
+                });
+                
+                await authenticate();
+                await loadDashboard();
+                
+                // Set current year in footer
+                document.getElementById('currentYear').textContent = new Date().getFullYear();
+                
+                log('✓ Analytics Dashboard initialized successfully', 'success');
+                
+            } catch (error) {
+                log(`Initialization failed: ${error.message}`, 'error');
+                updateStatus('Initialization Failed', 'error');
+                showMessage('Failed to initialize dashboard. Please refresh the page.', 'error');
+            }
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+
+    <!-- Existing Projects Script (from your reference) -->
+    <script src="projects-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const projectsMegaMenu = document.getElementById('projectsMegaMenu');
+            const mobileProjectsDropdown = document.getElementById('mobileProjectsDropdown');
+            const mobileProjectsDropdownContent = document.getElementById('mobileProjectsDropdownContent');
+
+            if (!projectsMegaMenu) return;
+
+            // Load projects data
+            const projectsByCategory = {};
+            const allProjects = getAllProjects();
+
+            allProjects.forEach(project => {
+                if (!projectsByCategory[project.category]) {
+                    projectsByCategory[project.category] = [];
+                }
+                projectsByCategory[project.category].push(project);
+            });
+
+            // Desktop Mega Menu
+            let megaMenuHTML = '';
+            Object.keys(projectsByCategory).slice(0, 3).forEach(category => {
+                megaMenuHTML += `
+                    <div class="mega-menu-column">
+                        <h4>${category}</h4>
+                        <ul class="mega-menu-links">
+                            ${projectsByCategory[category].map(p =>
+                                `<li><a href="project-details.php?id=${p.id}">${p.shortTitle}</a></li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+            projectsMegaMenu.innerHTML = megaMenuHTML;
+
+            // Mobile Dropdown Content
+            let mobileHTML = '';
+            allProjects.forEach(project => {
+                mobileHTML += `<a href="project-details.php?id=${project.id}">${project.shortTitle}</a>`;
+            });
+            mobileProjectsDropdownContent.innerHTML = mobileHTML;
+
+            // Mobile dropdown toggle
+            if (mobileProjectsDropdown && mobileProjectsDropdownContent) {
+                mobileProjectsDropdown.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const isOpen = mobileProjectsDropdownContent.style.display === 'contents';
+                    mobileProjectsDropdownContent.style.display = isOpen ? 'none' : 'contents';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

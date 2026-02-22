@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Health Analytics Dashboard - v2</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .status-banner {
+            background: rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-text {
+            font-weight: 600;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-indicator.authenticated {
+            background: #48bb78;
+            box-shadow: 0 0 10px rgba(72, 187, 120, 0.5);
+        }
+
+        .status-indicator.loading {
+            background: #ffa94d;
+            animation: pulse 1s infinite;
+        }
+
+        .status-indicator.error {
+            background: #ff6b6b;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .filters-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            height: 46px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .message-container {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .message.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 5px solid #48bb78;
+        }
+
+        .message.error {
+            background: #fed7d7;
+            color: #c53030;
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .message.info {
+            background: #bee3f8;
+            color: #2c5282;
+            border-left: 5px solid #4299e1;
+        }
+
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid #667eea;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
+        }
+
+        .kpi-card .value {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin: 15px 0;
+            color: #333;
+        }
+
+        .kpi-card .label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .chart-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 300px;
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .table-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+
+        .table-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            color: #333;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f7fafc;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #666;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .pagination button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pagination-info {
+            text-align: center;
+            color: #666;
+            margin-top: 15px;
+            font-weight: 500;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .kpi-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-banner {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .console-log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #333;
+        }
+
+        .console-line {
+            margin-bottom: 5px;
+            padding: 3px 0;
+        }
+
+        .console-line.info { color: #4facfe; }
+        .console-line.success { color: #48bb78; }
+        .console-line.error { color: #ff6b6b; }
+        .console-line.warn { color: #ffa94d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Patient Health Analytics Dashboard</h1>
+            <p>Comprehensive Report Analysis Board - v2</p>
+        </div>
+
+        <div class="status-banner">
+            <div>
+                <span class="status-indicator loading" id="statusIndicator"></span>
+                <span class="status-text" id="statusText">Initializing...</span>
+            </div>
+            <div id="userInfo"></div>
+        </div>
+
+        <div class="message-container" id="messageContainer"></div>
+
+        <div class="filters-section">
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="countryFilter">Country</label>
+                    <select id="countryFilter" onchange="loadStates()">
+                        <option value="">All Countries</option>
+                        <option value="1">India</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="stateFilter">State</label>
+                    <select id="stateFilter" onchange="loadDistricts()">
+                        <option value="">All States</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="districtFilter">District</label>
+                    <select id="districtFilter">
+                        <option value="">All Districts</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="genderFilter">Gender</label>
+                    <select id="genderFilter">
+                        <option value="">All Genders</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="ageGroupFilter">Age Group</label>
+                    <select id="ageGroupFilter">
+                        <option value="">All Age Groups</option>
+                        <option value="0-17">0-17</option>
+                        <option value="18-30">18-30</option>
+                        <option value="31-45">31-45</option>
+                        <option value="46-60">46-60</option>
+                        <option value="60+">60+</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="dateFromFilter">Date From</label>
+                    <input type="date" id="dateFromFilter">
+                </div>
+                <div class="filter-group">
+                    <label for="dateToFilter">Date To</label>
+                    <input type="date" id="dateToFilter">
+                </div>
+                <div class="filter-group filter-buttons">
+                    <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                    <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="kpi-section" id="kpiSection"></div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>Gender Distribution</h3>
+                <div class="chart-container" id="genderChartContainer">
+                    <div class="loading"><div class="spinner"></div>Loading...</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Age Group Distribution</h3>
+                <div class="chart-container" id="ageChartContainer">
+                    <div class="loading"><div class="spinner"></div>Loading...</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Blood Pressure Status</h3>
+                <div class="chart-container" id="bpChartContainer">
+                    <div class="loading"><div class="spinner"></div>Loading...</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>RBS Levels</h3>
+                <div class="chart-container" id="rbsChartContainer">
+                    <div class="loading"><div class="spinner"></div>Loading...</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>BMI Analysis</h3>
+                <div class="chart-container" id="bmiChartContainer">
+                    <div class="loading"><div class="spinner"></div>Loading...</div>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3>Top Villages</h3>
+                <div class="chart-container" id="villageChartContainer">
+                    <div class="loading"><div class="spinner"></div>Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-card">
+            <h3>Recent Patients</h3>
+            <div id="patientTableContainer">
+                <div class="loading"><div class="spinner"></div>Loading...</div>
+            </div>
+        </div>
+
+        <div class="console-log" id="consoleLog"></div>
+    </div>
+
+    <script>
+        // ==================== CONFIGURATION ====================
+        const CONFIG = {
+            BASE_URL: 'http://localhost:8000',
+            API_AUTH_LOGIN: '/api/auth/login',
+            API_AUTH_CHECK: '/api/auth/check',
+            API_STATS: '/api/analytics/stats',
+            API_DEMOGRAPHICS: '/api/analytics/demographics',
+            API_HEALTH_METRICS: '/api/analytics/health-metrics',
+            API_PATIENTS: '/api/analytics/patients',
+            API_STATES: '/api/analytics/states',
+            API_DISTRICTS: '/api/analytics/districts',
+            API_TALUKAS: '/api/analytics/talukas',
+
+            LOGIN_EMAIL: 'admin@admin.com',
+            LOGIN_PASSWORD: 'password',
+            TIMEOUT: 10000
+        };
+
+        // ==================== STATE MANAGEMENT ====================
+        const state = {
+            authenticated: false,
+            user: null,
+            api_token: null,
+            currentPage: 1,
+            chartInstances: {},
+            logs: [],
+            sessionValid: false
+        };
+
+        // ==================== LOGGING ====================
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = {
+                'info': 'ℹ',
+                'success': '✓',
+                'error': '✗',
+                'warn': '⚠'
+            }[type] || 'ℹ';
+
+            const logEntry = `[${timestamp}] ${prefix} ${message}`;
+            state.logs.push({ message: logEntry, type });
+
+            // Add to console log display
+            const consoleLog = document.getElementById('consoleLog');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = logEntry;
+            consoleLog.appendChild(line);
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+
+            // Also log to browser console
+            console[type === 'error' ? 'error' : type === 'warn' ? 'warn' : 'log'](logEntry);
+        }
+
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('messageContainer');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = message;
+            container.appendChild(messageEl);
+
+            setTimeout(() => {
+                messageEl.remove();
+            }, 5000);
+
+            log(message, type);
+        }
+
+        function updateStatus(text, status = 'loading') {
+            const indicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+
+            indicator.className = `status-indicator ${status === 'authenticated' ? 'authenticated' : status === 'error' ? 'error' : 'loading'}`;
+            statusText.textContent = text;
+
+            if (state.user) {
+                document.getElementById('userInfo').innerHTML = `Logged in as: <strong>${state.user.email}</strong>`;
+            }
+        }
+
+        // ==================== FETCH HELPER ====================
+        async function fetchAPI(endpoint, options = {}) {
+            const defaults = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            };
+
+            const finalOptions = { ...defaults, ...options };
+
+            // Add Bearer token if available (for protected endpoints)
+            if (state.api_token) {
+                finalOptions.headers['Authorization'] = `Bearer ${state.api_token}`;
+            }
+
+            if (finalOptions.body && typeof finalOptions.body === 'object') {
+                finalOptions.body = JSON.stringify(finalOptions.body);
+            }
+
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), CONFIG.TIMEOUT);
+
+            try {
+                const response = await fetch(CONFIG.BASE_URL + endpoint, {
+                    ...finalOptions,
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeout);
+
+                if (response.status === 401) {
+                    state.sessionValid = false;
+                    state.api_token = null;
+                    throw new Error('Unauthorized - Please login again');
+                }
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${error.substring(0, 100)}`);
+                }
+
+                return await response.json();
+
+            } catch (error) {
+                clearTimeout(timeout);
+                if (error.name === 'AbortError') {
+                    throw new Error(`Request timeout after ${CONFIG.TIMEOUT}ms`);
+                }
+                throw error;
+            }
+        }
+
+        // ==================== AUTHENTICATION ====================
+        async function authenticate() {
+            try {
+                updateStatus('Authenticating...', 'loading');
+                log('Starting token-based authentication flow...', 'info');
+
+                // Perform login to get token
+                log('Sending login credentials to get Bearer token...', 'info');
+                const loginResult = await fetchAPI(CONFIG.API_AUTH_LOGIN, {
+                    method: 'POST',
+                    body: {
+                        email: CONFIG.LOGIN_EMAIL,
+                        password: CONFIG.LOGIN_PASSWORD
+                    }
+                });
+
+                if (!loginResult.success) {
+                    throw new Error(loginResult.message || 'Login failed');
+                }
+
+                // Store the API token
+                state.api_token = loginResult.token;
+                state.authenticated = true;
+                state.user = loginResult.user;
+                state.sessionValid = true;
+
+                log(`✓ Token obtained: ${loginResult.token.substring(0, 20)}...`, 'success');
+                log(`✓ Successfully authenticated as ${loginResult.user.email}`, 'success');
+                updateStatus('Authenticated', 'authenticated');
+                showMessage(`Logged in as ${loginResult.user.email} (Token-based)`, 'success');
+
+                return true;
+
+            } catch (error) {
+                log(`Authentication failed: ${error.message}`, 'error');
+                updateStatus('Authentication Failed', 'error');
+                showMessage(`Authentication Error: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+
+        // ==================== DATA LOADING ====================
+        async function loadKPIs() {
+            try {
+                const params = getFilterParams();
+                const url = new URL(CONFIG.BASE_URL + CONFIG.API_STATS);
+                Object.entries(params).forEach(([key, value]) => {
+                    if (value) url.searchParams.append(key, value);
+                });
+
+                log('Loading KPI data...', 'info');
+                const data = await fetchAPI(CONFIG.API_STATS + formatParams(params));
+
+                const kpiData = [
+                    { label: 'Total Patients', value: data.total_patients, color: '#667eea' },
+                    { label: 'Male Patients', value: data.male_patients, color: '#48bb78' },
+                    { label: 'Female Patients', value: data.female_patients, color: '#ed8936' },
+                    { label: 'Avg Age', value: data.avg_age?.toFixed(1) || 'N/A', color: '#f56565' },
+                    { label: 'Samples', value: data.samples_collected, color: '#9f7aea' },
+                    { label: 'Referrals', value: data.referrals_made, color: '#4299e1' }
+                ];
+
+                const kpiSection = document.getElementById('kpiSection');
+                kpiSection.innerHTML = kpiData.map(kpi => `
+                    <div class="kpi-card" style="border-left-color: ${kpi.color}">
+                        <div class="label">${kpi.label}</div>
+                        <div class="value">${kpi.value}</div>
+                    </div>
+                `).join('');
+
+                log('✓ KPI data loaded', 'success');
+
+            } catch (error) {
+                log(`Error loading KPIs: ${error.message}`, 'error');
+                showMessage(`Error loading KPIs: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadDemographics() {
+            try {
+                const params = getFilterParams();
+                log('Loading demographics...', 'info');
+                const data = await fetchAPI(CONFIG.API_DEMOGRAPHICS + formatParams(params));
+
+                // Gender Chart
+                if (data.gender) {
+                    createChart('genderChartContainer', 'doughnut', {
+                        labels: data.gender.map(d => d.sex),
+                        datasets: [{
+                            data: data.gender.map(d => d.count),
+                            backgroundColor: ['#667eea', '#f093fb', '#4facfe'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                // Age Groups Chart
+                if (data.age_groups) {
+                    createChart('ageChartContainer', 'bar', {
+                        labels: data.age_groups.map(d => d.age_group),
+                        datasets: [{
+                            label: 'Count',
+                            data: data.age_groups.map(d => d.count),
+                            backgroundColor: '#48bb78',
+                            borderRadius: 8
+                        }]
+                    });
+                }
+
+                // Top Villages Chart
+                if (data.top_villages) {
+                    const villages = data.top_villages.slice(0, 10);
+                    createChart('villageChartContainer', 'bar', {
+                        indexAxis: 'y',
+                        labels: villages.map(d => d.village || 'Unknown'),
+                        datasets: [{
+                            label: 'Patients',
+                            data: villages.map(d => d.count),
+                            backgroundColor: '#ed8936',
+                            borderRadius: 8
+                        }]
+                    });
+                }
+
+                log('✓ Demographics loaded', 'success');
+
+            } catch (error) {
+                log(`Error loading demographics: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadHealthMetrics() {
+            try {
+                const params = getFilterParams();
+                log('Loading health metrics...', 'info');
+                const data = await fetchAPI(CONFIG.API_HEALTH_METRICS + formatParams(params));
+
+                // BP Status
+                if (data.bp_status) {
+                    createChart('bpChartContainer', 'pie', {
+                        labels: data.bp_status.map(d => d.bp_status),
+                        datasets: [{
+                            data: data.bp_status.map(d => d.count),
+                            backgroundColor: ['#48bb78', '#ed8936', '#f56565'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                // RBS Levels
+                if (data.rbs_levels) {
+                    createChart('rbsChartContainer', 'pie', {
+                        labels: data.rbs_levels.map(d => d.rbs_status),
+                        datasets: [{
+                            data: data.rbs_levels.map(d => d.count),
+                            backgroundColor: ['#4299e1', '#9f7aea', '#ed64a6'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                // BMI Analysis
+                if (data.bmi_analysis) {
+                    createChart('bmiChartContainer', 'doughnut', {
+                        labels: data.bmi_analysis.map(d => d.bmi_status),
+                        datasets: [{
+                            data: data.bmi_analysis.map(d => d.count),
+                            backgroundColor: ['#48bb78', '#4299e1', '#ed8936', '#f56565'],
+                            borderColor: 'white',
+                            borderWidth: 2
+                        }]
+                    });
+                }
+
+                log('✓ Health metrics loaded', 'success');
+
+            } catch (error) {
+                log(`Error loading health metrics: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadPatients(page = 1) {
+            try {
+                const params = { ...getFilterParams(), page, per_page: 10 };
+                log(`Loading patients (page ${page})...`, 'info');
+                const data = await fetchAPI(CONFIG.API_PATIENTS + formatParams(params));
+
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient ID</th>
+                                <th>Name</th>
+                                <th>Gender</th>
+                                <th>Age</th>
+                                <th>Village</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                if (data.data?.length > 0) {
+                    data.data.forEach(patient => {
+                        html += `
+                            <tr>
+                                <td>${patient.patient_id || 'N/A'}</td>
+                                <td>${patient.name || 'N/A'}</td>
+                                <td>${patient.sex || 'N/A'}</td>
+                                <td>${patient.age || 'N/A'}</td>
+                                <td>${patient.village || 'N/A'}</td>
+                                <td>${new Date(patient.date).toLocaleDateString() || 'N/A'}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    html += '<tr><td colspan="6" style="text-align: center; color: #999;">No patients found</td></tr>';
+                }
+
+                html += `
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <button onclick="loadPatients(1)" ${page === 1 ? 'disabled' : ''}>First</button>
+                        <button onclick="loadPatients(${page - 1})" ${page === 1 ? 'disabled' : ''}>Previous</button>
+                        <button onclick="loadPatients(${page + 1})" ${page >= data.last_page ? 'disabled' : ''}>Next</button>
+                        <button onclick="loadPatients(${data.last_page})" ${page >= data.last_page ? 'disabled' : ''}>Last</button>
+                    </div>
+                    <div class="pagination-info">
+                        Page ${data.current_page} of ${data.last_page} | Total: ${data.total} records
+                    </div>
+                `;
+
+                document.getElementById('patientTableContainer').innerHTML = html;
+                log('✓ Patients loaded', 'success');
+
+            } catch (error) {
+                log(`Error loading patients: ${error.message}`, 'error');
+                document.getElementById('patientTableContainer').innerHTML =
+                    `<div style="color: #ff6b6b; padding: 20px;">Error loading patients: ${error.message}</div>`;
+            }
+        }
+
+        // ==================== CHART RENDERING ====================
+        function createChart(containerId, type, config) {
+            const container = document.getElementById(containerId);
+            const canvas = container.querySelector('canvas') || document.createElement('canvas');
+
+            if (!container.querySelector('canvas')) {
+                container.innerHTML = '';
+                container.appendChild(canvas);
+            }
+
+            if (state.chartInstances[containerId]) {
+                state.chartInstances[containerId].destroy();
+            }
+
+            const chartConfig = {
+                type,
+                data: config,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: config.indexAxis || 'x',
+                    plugins: {
+                        legend: {
+                            display: type !== 'bar',
+                            position: 'bottom',
+                            labels: { font: { size: 12 }, padding: 15 }
+                        }
+                    },
+                    scales: type === 'bar' ? {
+                        y: { beginAtZero: true, ticks: { font: { size: 11 } } },
+                        x: { ticks: { font: { size: 11 } } }
+                    } : undefined
+                }
+            };
+
+            state.chartInstances[containerId] = new Chart(canvas, chartConfig);
+        }
+
+        // ==================== FILTER HELPERS ====================
+        function getFilterParams() {
+            const params = {};
+            const country = document.getElementById('countryFilter').value;
+            const state = document.getElementById('stateFilter').value;
+            const district = document.getElementById('districtFilter').value;
+            const gender = document.getElementById('genderFilter').value;
+            const ageGroup = document.getElementById('ageGroupFilter').value;
+            const dateFrom = document.getElementById('dateFromFilter').value;
+            const dateTo = document.getElementById('dateToFilter').value;
+
+            if (country) params.country_id = country;
+            if (state) params.state_id = state;
+            if (district) params.district_id = district;
+            if (gender) params.gender = gender;
+            if (ageGroup) params.age_group = ageGroup;
+            if (dateFrom) params.date_from = dateFrom;
+            if (dateTo) params.date_to = dateTo;
+
+            return params;
+        }
+
+        function formatParams(params) {
+            const query = new URLSearchParams(params).toString();
+            return query ? '?' + query : '';
+        }
+
+        function applyFilters() {
+            showMessage('Applying filters...', 'info');
+            loadDashboard();
+        }
+
+        function resetFilters() {
+            document.getElementById('countryFilter').value = '';
+            document.getElementById('stateFilter').value = '';
+            document.getElementById('districtFilter').value = '';
+            document.getElementById('genderFilter').value = '';
+            document.getElementById('ageGroupFilter').value = '';
+            document.getElementById('dateFromFilter').value = '';
+            document.getElementById('dateToFilter').value = '';
+
+            // Clear state and district dropdowns
+            clearStateOptions();
+            clearDistrictOptions();
+
+            showMessage('Filters reset', 'success');
+            loadDashboard();
+        }
+
+        // ==================== LOCATION FILTER HELPERS ====================
+        async function loadStates() {
+            try {
+                const countryId = document.getElementById('countryFilter').value;
+                const stateSelect = document.getElementById('stateFilter');
+
+                if (!countryId) {
+                    clearStateOptions();
+                    clearDistrictOptions();
+                    return;
+                }
+
+                log('Loading states for country...' , 'info');
+                const data = await fetchAPI(CONFIG.API_STATES + '/' + countryId);
+
+                clearStateOptions();
+                if (data && Array.isArray(data)) {
+                    data.forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state.id;
+                        option.text = state.name;
+                        stateSelect.appendChild(option);
+                    });
+                    log(`✓ Loaded ${data.length} states`, 'success');
+                } else {
+                    log('No states found', 'warn');
+                }
+            } catch (error) {
+                log(`Error loading states: ${error.message}`, 'error');
+            }
+        }
+
+        async function loadDistricts() {
+            try {
+                const stateId = document.getElementById('stateFilter').value;
+                const districtSelect = document.getElementById('districtFilter');
+
+                if (!stateId) {
+                    clearDistrictOptions();
+                    return;
+                }
+
+                log('Loading districts for state...', 'info');
+                const data = await fetchAPI(CONFIG.API_DISTRICTS + '/' + stateId);
+
+                clearDistrictOptions();
+                if (data && Array.isArray(data)) {
+                    data.forEach(district => {
+                        const option = document.createElement('option');
+                        option.value = district.id;
+                        option.text = district.name;
+                        districtSelect.appendChild(option);
+                    });
+                    log(`✓ Loaded ${data.length} districts`, 'success');
+                } else {
+                    log('No districts found', 'warn');
+                }
+            } catch (error) {
+                log(`Error loading districts: ${error.message}`, 'error');
+            }
+        }
+
+        function clearStateOptions() {
+            const stateSelect = document.getElementById('stateFilter');
+            // Keep only the "All States" option
+            while (stateSelect.options.length > 1) {
+                stateSelect.remove(1);
+            }
+            stateSelect.value = '';
+        }
+
+        function clearDistrictOptions() {
+            const districtSelect = document.getElementById('districtFilter');
+            // Keep only the "All Districts" option
+            while (districtSelect.options.length > 1) {
+                districtSelect.remove(1);
+            }
+            districtSelect.value = '';
+        }
+
+        // ==================== MAIN FLOW ====================
+        async function loadDashboard() {
+            try {
+                log('Loading dashboard data...', 'info');
+                await Promise.all([
+                    loadKPIs(),
+                    loadDemographics(),
+                    loadHealthMetrics(),
+                    loadPatients()
+                ]);
+                showMessage('Dashboard loaded successfully!', 'success');
+                log('Dashboard fully loaded', 'success');
+            } catch (error) {
+                log(`Dashboard error: ${error.message}`, 'error');
+                showMessage(`Error loading dashboard: ${error.message}`, 'error');
+            }
+        }
+
+        async function initialize() {
+            try {
+                log('Initializing application...', 'info');
+                await authenticate();
+                await loadDashboard();
+            } catch (error) {
+                log(`Initialization failed: ${error.message}`, 'error');
+                updateStatus('Initialization Failed', 'error');
+            }
+        }
+
+        // ==================== INITIALIZATION ====================
+        window.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html>
