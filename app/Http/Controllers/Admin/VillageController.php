@@ -83,4 +83,29 @@ class VillageController extends Controller
             ->route('admin.talukas.villages.index', $taluka)
             ->with('success', 'Village deleted successfully');
     }
+
+    public function getByTaluka(Taluka $taluka)
+    {
+        $villages = $taluka->villages()->where('is_active', true)->get(['id', 'name']);
+        return response()->json($villages);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('q', '');
+        $talukaId = $request->get('taluka_id');
+
+        $villages = Village::where('is_active', true);
+
+        if ($talukaId) {
+            $villages->where('taluka_id', $talukaId);
+        }
+
+        if ($query) {
+            $villages->where('name', 'LIKE', '%' . $query . '%');
+        }
+
+        $results = $villages->limit(10)->get(['id', 'name']);
+        return response()->json($results);
+    }
 }

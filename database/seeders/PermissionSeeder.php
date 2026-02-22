@@ -66,7 +66,25 @@ class PermissionSeeder extends Seeder
             // Analytics Module
             ['name' => 'analytics_view', 'display_name' => 'View Analytics Dashboard', 'module' => 'analytics', 'action' => 'read', 'description' => 'Can view patient health analytics and reports'],
             ['name' => 'analytics_export', 'display_name' => 'Export Analytics Data', 'module' => 'analytics', 'action' => 'export', 'description' => 'Can export analytics data and reports'],
-        ];
+
+            // Complaints Module
+            ['name' => 'complaints_view', 'display_name' => 'View Complaints', 'module' => 'complaints', 'action' => 'read', 'description' => 'Can view complaints list'],
+            ['name' => 'complaints_create', 'display_name' => 'Create Complaint', 'module' => 'complaints', 'action' => 'create', 'description' => 'Can create new complaints'],
+            ['name' => 'complaints_edit', 'display_name' => 'Edit Complaint', 'module' => 'complaints', 'action' => 'update', 'description' => 'Can edit complaint details'],
+            ['name' => 'complaints_delete', 'display_name' => 'Delete Complaint', 'module' => 'complaints', 'action' => 'delete', 'description' => 'Can delete complaints'],
+
+            // Diagnosis Module
+                ['name' => 'diagnoses_view', 'display_name' => 'View Diagnoses', 'module' => 'diagnoses', 'action' => 'read', 'description' => 'Can view diagnoses list'],
+                ['name' => 'diagnoses_create', 'display_name' => 'Create Diagnosis', 'module' => 'diagnoses', 'action' => 'create', 'description' => 'Can create new diagnosis'],
+                ['name' => 'diagnoses_edit', 'display_name' => 'Edit Diagnosis', 'module' => 'diagnoses', 'action' => 'update', 'description' => 'Can edit diagnosis details'],
+                ['name' => 'diagnoses_delete', 'display_name' => 'Delete Diagnosis', 'module' => 'diagnoses', 'action' => 'delete', 'description' => 'Can delete diagnoses'],
+            
+            //Known conditions
+            ['name' => 'known_conditions_view', 'display_name' => 'View Known Conditions', 'module' => 'known_conditions', 'action' => 'read'],
+            ['name' => 'known_conditions_create', 'display_name' => 'Create Known Condition', 'module' => 'known_conditions', 'action' => 'create'],
+            ['name' => 'known_conditions_edit', 'display_name' => 'Edit Known Condition', 'module' => 'known_conditions', 'action' => 'update'],
+            ['name' => 'known_conditions_delete', 'display_name' => 'Delete Known Condition', 'module' => 'known_conditions', 'action' => 'delete'],
+                    ];
 
         // Create permissions
         foreach ($permissions as $permission) {

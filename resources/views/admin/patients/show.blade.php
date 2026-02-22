@@ -145,6 +145,10 @@
                     <label style="font-weight: 600; color: #666;">BSL</label>
                     <p>{{ $patient->bsl ? $patient->bsl . ' mg/dL' : 'N/A' }}</p>
                 </div>
+                <div class="col-md-3 mb-3">
+                    <label style="font-weight: 600; color: #666;">BMI</label>
+                    <p>{{ $patient->bmi ? number_format($patient->bmi, 2) : 'N/A' }}</p>
+                </div>
             </div>
         </div>
     </div>

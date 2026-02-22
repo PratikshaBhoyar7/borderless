@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Patient;
 use App\Models\Country;
 use App\Models\CampaignType;
+use App\Models\Complaint;
+use App\Models\Diagnosis;
+use App\Models\KnownCondition;
 use App\Imports\PatientImport;
 use App\Exports\PatientTemplateExport;
 use Illuminate\Http\Request;
@@ -27,7 +30,10 @@ class PatientController extends Controller
     {
         $countries = Country::active()->get();
         $campaignTypes = CampaignType::active()->get();
-        return view('admin.patients.create', compact('countries', 'campaignTypes'));
+        $complaints = Complaint::orderBy('complaint')->get();
+        $diagnoses = Diagnosis::orderBy('title')->get();
+        $knownConditions = KnownCondition::orderBy('title')->get();
+        return view('admin.patients.create', compact('countries', 'campaignTypes', 'complaints', 'diagnoses', 'knownConditions'));
     }
 
     public function store(Request $request)
@@ -147,7 +153,10 @@ class PatientController extends Controller
     {
         $countries = Country::active()->get();
         $campaignTypes = CampaignType::active()->get();
-        return view('admin.patients.edit', compact('patient', 'countries', 'campaignTypes'));
+        $complaints = Complaint::orderBy('complaint')->get();
+        $diagnoses = Diagnosis::orderBy('title')->get();
+        $knownConditions = KnownCondition::orderBy('title')->get();
+        return view('admin.patients.edit', compact('patient', 'countries', 'campaignTypes', 'complaints', 'diagnoses', 'knownConditions'));
     }
 
     public function update(Request $request, Patient $patient)

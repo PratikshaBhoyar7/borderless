@@ -13,24 +13,43 @@
 
 <div class="table-container">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding: 1.25rem 1.5rem;">
             <form method="POST" action="{{ route('admin.patients.store') }}" id="patientForm">
                 @csrf
 
                 <!-- Basic Information Section -->
-                <h5 class="mb-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                <h5 class="mb-2" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                     <i class="bi bi-person-vcard"></i> Basic Information
                 </h5>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-2">
                         <label for="patient_name" class="form-label">Patient Name <span style="color: red;">*</span></label>
                         <input type="text" class="form-control @error('patient_name') is-invalid @enderror" id="patient_name" name="patient_name" value="{{ old('patient_name') }}" required>
                         @error('patient_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-2">
+                        <label for="age" class="form-label">Age <span style="color: red;">*</span></label>
+                        <input type="number" class="form-control @error('age') is-invalid @enderror" id="age" name="age" value="{{ old('age') }}" min="0" max="150" required>
+                        @error('age')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="sex" class="form-label">Sex <span style="color: red;">*</span></label>
+                        <select class="form-select @error('sex') is-invalid @enderror" id="sex" name="sex" required>
+                            <option value="">-- Select --</option>
+                            <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="Other" {{ old('sex') == 'Other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                        @error('sex')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-2 mb-2">
                         <label for="date" class="form-label">Date <span style="color: red;">*</span></label>
                         <input type="date" class="form-control @error('date') is-invalid @enderror" id="date" name="date" value="{{ old('date') }}" required>
                         @error('date')
@@ -40,7 +59,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-2">
                         <label for="campaign_type_id" class="form-label">Campaign Type</label>
                         <select class="form-select @error('campaign_type_id') is-invalid @enderror" id="campaign_type_id" name="campaign_type_id">
                             <option value="">-- Select Campaign Type --</option>
@@ -56,45 +75,24 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="age" class="form-label">Age <span style="color: red;">*</span></label>
-                        <input type="number" class="form-control @error('age') is-invalid @enderror" id="age" name="age" value="{{ old('age') }}" min="0" max="150" required>
-                        @error('age')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="sex" class="form-label">Sex <span style="color: red;">*</span></label>
-                        <select class="form-select @error('sex') is-invalid @enderror" id="sex" name="sex" required>
-                            <option value="">-- Select --</option>
-                            <option value="Male" {{ old('sex') == 'Male' ? 'selected' : '' }}>Male</option>
-                            <option value="Female" {{ old('sex') == 'Female' ? 'selected' : '' }}>Female</option>
-                            <option value="Other" {{ old('sex') == 'Other' ? 'selected' : '' }}>Other</option>
-                        </select>
-                        @error('sex')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
-
                 <!-- Location Section -->
-                <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                     <i class="bi bi-map"></i> Location Details
                 </h5>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-2" style="position: relative;">
                         <label for="village" class="form-label">Village <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control @error('village') is-invalid @enderror" id="village" name="village" value="{{ old('village') }}" required>
+                        <input type="text" class="form-control @error('village') is-invalid @enderror" id="village" name="village" value="{{ old('village') }}" required autocomplete="off" placeholder="Type to search...">
+                        <div id="village-suggestions" class="autocomplete-dropdown" style="display:none; position:absolute; z-index:1000; width:calc(100% - 0px); background:#fff; border:1px solid #ddd; border-top:none; border-radius:0 0 4px 4px; max-height:200px; overflow-y:auto;"></div>
                         @error('village')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-2">
                         <label for="country_id" class="form-label">Country</label>
                         <select class="form-select @error('country_id') is-invalid @enderror" id="country_id" name="country_id" onchange="loadStates()">
-                            <option value="">-- Select Country --</option>
+                            <option value="">-- Select --</option>
                             @foreach ($countries as $country)
                                 <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>
                                     {{ $country->name }}
@@ -105,49 +103,46 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-2">
                         <label for="state_id" class="form-label">State</label>
                         <select class="form-select @error('state_id') is-invalid @enderror" id="state_id" name="state_id" onchange="loadDistricts()">
-                            <option value="">-- Select State --</option>
+                            <option value="">-- Select --</option>
                         </select>
                         @error('state_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-2">
                         <label for="district_id" class="form-label">District</label>
                         <select class="form-select @error('district_id') is-invalid @enderror" id="district_id" name="district_id" onchange="loadTalukas()">
-                            <option value="">-- Select District --</option>
+                            <option value="">-- Select --</option>
                         </select>
                         @error('district_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="taluka_id" class="form-label">Taluka</label>
-                        <select class="form-select @error('taluka_id') is-invalid @enderror" id="taluka_id" name="taluka_id">
-                            <option value="">-- Select Taluka --</option>
-                        </select>
-                        @error('taluka_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="mobile" class="form-label">Mobile Number <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control @error('mobile') is-invalid @enderror" id="mobile" name="mobile" value="{{ old('mobile') }}" pattern="[0-9]{10}" placeholder="10-digit number" required>
+                    <div class="col-md-3 mb-2">
+                        <label for="taluka_id" class="form-label">Taluka</label>
+                        <select class="form-select @error('taluka_id') is-invalid @enderror" id="taluka_id" name="taluka_id">
+                            <option value="">-- Select --</option>
+                        </select>
+                        @error('taluka_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label for="mobile" class="form-label">Mobile <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control @error('mobile') is-invalid @enderror" id="mobile" name="mobile" value="{{ old('mobile') }}" pattern="[0-9]{10}" placeholder="10-digit">
                         @error('mobile')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-5 mb-2">
                         <label for="aadhar" class="form-label">Aadhar Number</label>
-                        <input type="text" class="form-control @error('aadhar') is-invalid @enderror" id="aadhar" name="aadhar" value="{{ old('aadhar') }}" pattern="[0-9]{12}" placeholder="12-digit number">
+                        <input type="text" class="form-control @error('aadhar') is-invalid @enderror" id="aadhar" name="aadhar" value="{{ old('aadhar') }}" pattern="[0-9]{12}" placeholder="12-digit">
                         @error('aadhar')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -156,34 +151,34 @@
 
                 <!-- Vital Signs Section -->
                 <div id="vital_signs_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-heart-pulse"></i> Vital Signs
                     </h5>
 
                     <div class="row">
-                        <div class="col-md-3 mb-3" id="height_field">
+                        <div class="col-md-3 mb-2" id="height_field">
                             <label for="height" class="form-label">Height (cm)</label>
                         <input type="number" step="0.1" class="form-control @error('height') is-invalid @enderror" id="height" name="height" value="{{ old('height') }}">
                         @error('height')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-3 mb-3" id="weight_field">
+                    <div class="col-md-3 mb-2" id="weight_field">
                         <label for="weight" class="form-label">Weight (kg)</label>
                         <input type="number" step="0.1" class="form-control @error('weight') is-invalid @enderror" id="weight" name="weight" value="{{ old('weight') }}">
                         @error('weight')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-3 mb-3" id="bp_field">
-                        <label for="bp" class="form-label">Blood Pressure</label>
-                        <input type="text" class="form-control @error('bp') is-invalid @enderror" id="bp" name="bp" value="{{ old('bp') }}" placeholder="e.g., 120/80">
+                    <div class="col-md-3 mb-2" id="bp_field">
+                        <label for="bp" class="form-label">BP</label>
+                        <input type="text" class="form-control @error('bp') is-invalid @enderror" id="bp" name="bp" value="{{ old('bp') }}" placeholder="120/80">
                         @error('bp')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-3 mb-3" id="hb_field">
-                        <label for="hb" class="form-label">Hemoglobin (g/dL)</label>
+                    <div class="col-md-3 mb-2" id="hb_field">
+                        <label for="hb" class="form-label">HB (g/dL)</label>
                         <input type="number" step="0.1" class="form-control @error('hb') is-invalid @enderror" id="hb" name="hb" value="{{ old('hb') }}">
                         @error('hb')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -192,66 +187,75 @@
                 </div>
 
                     <div class="row">
-                        <div class="col-md-6 mb-3" id="rbs_field">
+                        <div class="col-md-3 mb-2" id="rbs_field">
                             <label for="rbs" class="form-label">RBS (mg/dL)</label>
                             <input type="number" class="form-control @error('rbs') is-invalid @enderror" id="rbs" name="rbs" value="{{ old('rbs') }}">
                             @error('rbs')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <div class="col-md-6 mb-3" id="bsl_field">
+                        <div class="col-md-3 mb-2" id="bsl_field">
                             <label for="bsl" class="form-label">BSL (mg/dL)</label>
                             <input type="number" class="form-control @error('bsl') is-invalid @enderror" id="bsl" name="bsl" value="{{ old('bsl') }}">
                             @error('bsl')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-
-                    <!-- BMI Field (for Awareness Camp) -->
-                    <div class="row" id="bmi_field">
-                        <div class="col-md-6 mb-3">
-                            <label for="bmi" class="form-label">BMI</label>
-                            <input type="number" step="0.01" class="form-control @error('bmi') is-invalid @enderror" id="bmi" name="bmi" value="{{ old('bmi') }}">
-                            @error('bmi')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
+                        <div class="col-md-3 mb-2" id="bmi_field">
+                            <label for="bmi_display" class="form-label">BMI</label>
+                            <input type="number" step="0.01" class="form-control" id="bmi_display" value="{{ old('bmi') }}" disabled readonly>
+                            <input type="hidden" id="bmi" name="bmi" value="{{ old('bmi') }}">
                         </div>
                     </div>
                 </div>
 
                 <!-- Clinical Information Section -->
                 <div id="clinical_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-stethoscope"></i> Clinical Information
                     </h5>
 
-                    <div class="mb-3" id="complaints_field">
-                        <label for="complaints" class="form-label">Chief Complaints <span style="color: red;">*</span></label>
-                        <textarea class="form-control @error('complaints') is-invalid @enderror" id="complaints" name="complaints" rows="3">{{ old('complaints') }}</textarea>
+                    <div class="mb-2" id="complaints_field">
+                        <label for="complaints_select" class="form-label">Chief Complaints <span style="color: red;">*</span></label>
+                        <select id="complaints_select" name="complaints_select" multiple class="form-control @error('complaints') is-invalid @enderror" style="display: none;">
+                            @foreach($complaints as $item)
+                                <option value="{{ $item->complaint }}">{{ $item->complaint }}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="complaints" id="complaints_hidden" value="{{ old('complaints') }}">
                         @error('complaints')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3" id="known_conditions_field">
-                        <label for="known_conditions" class="form-label">Known Conditions (K/O/C)</label>
-                        <textarea class="form-control @error('known_conditions') is-invalid @enderror" id="known_conditions" name="known_conditions" rows="3">{{ old('known_conditions') }}</textarea>
+                    <div class="mb-2" id="known_conditions_field">
+                        <label for="known_conditions_select" class="form-label">Known Conditions (K/O/C)</label>
+                        <select id="known_conditions_select" name="known_conditions_select" multiple class="form-control @error('known_conditions') is-invalid @enderror" style="display: none;">
+                            @foreach($knownConditions as $item)
+                                <option value="{{ $item->title }}">{{ $item->title }}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="known_conditions" id="known_conditions_hidden" value="{{ old('known_conditions') }}">
                         @error('known_conditions')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3" id="diagnosis_field">
-                        <label for="diagnosis" class="form-label">Diagnosis <span style="color: red;">*</span></label>
-                        <textarea class="form-control @error('diagnosis') is-invalid @enderror" id="diagnosis" name="diagnosis" rows="3">{{ old('diagnosis') }}</textarea>
+                    <div class="mb-2" id="diagnosis_field">
+                        <label for="diagnosis_select" class="form-label">Diagnosis <span style="color: red;">*</span></label>
+                        <select id="diagnosis_select" name="diagnosis_select" multiple class="form-control @error('diagnosis') is-invalid @enderror" style="display: none;">
+                            @foreach($diagnoses as $item)
+                                <option value="{{ $item->title }}">{{ $item->title }}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="diagnosis" id="diagnosis_hidden" value="{{ old('diagnosis') }}">
                         @error('diagnosis')
-                            <div class="invalid-feedback">{{ $message }}</div>
+                            <div class="invalid-feedback" style="display: block;">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <!-- Topic Covered (for Awareness Camp) -->
-                    <div class="mb-3" id="topic_covered_field">
+                    <div class="mb-2" id="topic_covered_field">
                         <label for="topic_covered" class="form-label">Topic Covered</label>
                         <input type="text" class="form-control @error('topic_covered') is-invalid @enderror" id="topic_covered" name="topic_covered" value="{{ old('topic_covered') }}">
                         @error('topic_covered')
@@ -260,18 +264,18 @@
                     </div>
 
                     <!-- Investigation Field (for Awareness Camp and Special HC) -->
-                    <div class="mb-3" id="investigation_field">
+                    <div class="mb-2" id="investigation_field">
                         <label for="investigation" class="form-label">Other Investigations/Examinations/Screening (BP/BSL/HB/ECG/etc.)</label>
-                        <textarea class="form-control @error('investigation') is-invalid @enderror" id="investigation" name="investigation" rows="3">{{ old('investigation') }}</textarea>
+                        <textarea class="form-control @error('investigation') is-invalid @enderror" id="investigation" name="investigation" rows="2">{{ old('investigation') }}</textarea>
                         @error('investigation')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <!-- Advice Field (for Awareness Camp and Special HC) -->
-                    <div class="mb-3" id="advice_field">
+                    <div class="mb-2" id="advice_field">
                         <label for="advice" class="form-label">Advice/Referral If any</label>
-                        <textarea class="form-control @error('advice') is-invalid @enderror" id="advice" name="advice" rows="3">{{ old('advice') }}</textarea>
+                        <textarea class="form-control @error('advice') is-invalid @enderror" id="advice" name="advice" rows="2">{{ old('advice') }}</textarea>
                         @error('advice')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -280,21 +284,21 @@
 
                 <!-- Treatment Section -->
                 <div id="treatment_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-pill"></i> Treatment
                     </h5>
 
-                    <div class="mb-3" id="treatment_field">
+                    <div class="mb-2" id="treatment_field">
                         <label for="treatment" class="form-label">Treatment <span style="color: red;">*</span></label>
-                        <textarea class="form-control @error('treatment') is-invalid @enderror" id="treatment" name="treatment" rows="3">{{ old('treatment') }}</textarea>
+                        <textarea class="form-control @error('treatment') is-invalid @enderror" id="treatment" name="treatment" rows="2">{{ old('treatment') }}</textarea>
                         @error('treatment')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <div class="mb-3" id="dosage_field">
+                    <div class="mb-2" id="dosage_field">
                         <label for="dosage" class="form-label">Dosage <span style="color: red;">*</span></label>
-                        <textarea class="form-control @error('dosage') is-invalid @enderror" id="dosage" name="dosage" rows="3">{{ old('dosage') }}</textarea>
+                        <textarea class="form-control @error('dosage') is-invalid @enderror" id="dosage" name="dosage" rows="2">{{ old('dosage') }}</textarea>
                         @error('dosage')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -303,11 +307,11 @@
 
                 <!-- Lab & Referral Section -->
                 <div id="lab_referral_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-flask"></i> Lab Tests & Referral
                     </h5>
 
-                    <div class="mb-3" id="lab_tests_field">
+                    <div class="mb-2" id="lab_tests_field">
                         <label class="form-label">Lab Tests</label>
                     <div class="form-group">
                         <div class="form-check">
@@ -334,7 +338,7 @@
                     </div>
 
                     <div class="row" id="sample_collected_field">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-2">
                             <label for="sample_collected" class="form-label">Sample Collected</label>
                             <select class="form-select @error('sample_collected') is-invalid @enderror" id="sample_collected" name="sample_collected">
                                 <option value="">-- Select --</option>
@@ -346,19 +350,16 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                    </div>
-
-                    <div class="row" id="referral_fields">
-                        <div class="col-md-6 mb-3" id="referral_type_field">
+                        <div class="col-md-4 mb-2" id="referral_type_field">
                             <label for="referral_type" class="form-label">Referral Type</label>
-                            <input type="text" class="form-control @error('referral_type') is-invalid @enderror" id="referral_type" name="referral_type" value="{{ old('referral_type') }}" placeholder="e.g., Specialist, Hospital">
+                            <input type="text" class="form-control @error('referral_type') is-invalid @enderror" id="referral_type" name="referral_type" value="{{ old('referral_type') }}" placeholder="e.g., Specialist">
                             @error('referral_type')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
 
-                    <div class="mb-3" id="referral_details_field">
+                    <div class="mb-2" id="referral_details_field">
                         <label for="referral_details" class="form-label">Referral Details</label>
                         <textarea class="form-control @error('referral_details') is-invalid @enderror" id="referral_details" name="referral_details" rows="2">{{ old('referral_details') }}</textarea>
                         @error('referral_details')
@@ -369,13 +370,13 @@
 
                 <!-- Additional Notes -->
                 <div id="notes_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-sticky"></i> Additional Notes
                     </h5>
 
-                    <div class="mb-3" id="notes_field">
+                    <div class="mb-2" id="notes_field">
                         <label for="notes" class="form-label">Notes</label>
-                        <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="3">{{ old('notes') }}</textarea>
+                        <textarea class="form-control @error('notes') is-invalid @enderror" id="notes" name="notes" rows="2">{{ old('notes') }}</textarea>
                         @error('notes')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -468,7 +469,7 @@ function toggleSwatchBharatFields() {
 
     // Toggle required attribute on visible fields
     const vitalSignsInputs = document.querySelectorAll('#vital_signs_section input, #vital_signs_section textarea');
-    const clinicalInputs = document.querySelectorAll('#clinical_section input, #clinical_section textarea, #clinical_section select');
+    const clinicalInputs = document.querySelectorAll('#clinical_section input, #clinical_section textarea, #clinical_section select, #clinical_section [type="hidden"]');
     const treatmentInputs = document.querySelectorAll('#treatment_section input, #treatment_section textarea');
     const labInputs = document.querySelectorAll('#lab_referral_section input, #lab_referral_section textarea, #lab_referral_section select, #lab_referral_section .form-check-input');
     const notesInputs = document.querySelectorAll('#notes_section textarea');
@@ -659,6 +660,114 @@ function loadTalukas() {
         .catch(error => console.error('Error:', error));
 }
 
+// Calculate BMI automatically
+function calculateBMI() {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight').value);
+    const bmiDisplay = document.getElementById('bmi_display');
+    const bmiInput = document.getElementById('bmi');
+
+    if (height > 0 && weight > 0) {
+        // BMI = weight (kg) / (height in meters)^2
+        // Height is in cm, so convert to meters by dividing by 100
+        const heightInMeters = height / 100;
+        const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(2);
+        bmiDisplay.value = bmi;
+        bmiInput.value = bmi;
+    } else {
+        bmiDisplay.value = '';
+        bmiInput.value = '';
+    }
+}
+
+// Village autocomplete
+let villageCache = [];
+let villageDebounceTimer;
+
+function loadVillages() {
+    const talukaId = document.getElementById('taluka_id').value;
+    if (!talukaId) {
+        villageCache = [];
+        return;
+    }
+
+    fetch(`/admin/villages/by-taluka/${talukaId}`)
+        .then(response => response.json())
+        .then(data => {
+            villageCache = data;
+            console.log('Villages loaded for taluka:', data);
+            // If village field is focused and has input, show suggestions
+            const villageInput = document.getElementById('village');
+            if (document.activeElement === villageInput && villageInput.value.length > 0) {
+                showVillageSuggestions();
+            }
+        })
+        .catch(error => console.error('Error loading villages:', error));
+}
+
+function showVillageSuggestions() {
+    const villageInput = document.getElementById('village');
+    const suggestionsDiv = document.getElementById('village-suggestions');
+    const searchTerm = villageInput.value.toLowerCase().trim();
+
+    if (!searchTerm || searchTerm.length === 0) {
+        suggestionsDiv.style.display = 'none';
+        return;
+    }
+
+    const talukaId = document.getElementById('taluka_id').value;
+
+    // If taluka is selected, use cached villages; otherwise, use search API
+    if (talukaId && villageCache.length > 0) {
+        // Filter from cached villages
+        const matches = villageCache.filter(v =>
+            v.name.toLowerCase().includes(searchTerm)
+        );
+
+        if (matches.length === 0) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+
+        displaySuggestions(matches);
+    } else {
+        // Use search API for all villages or when cache is empty
+        fetch(`/admin/villages/search?q=${encodeURIComponent(searchTerm)}${talukaId ? '&taluka_id=' + talukaId : ''}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Search results:', data);
+                if (data.length === 0) {
+                    suggestionsDiv.style.display = 'none';
+                    return;
+                }
+                displaySuggestions(data);
+            })
+            .catch(error => console.error('Error searching villages:', error));
+    }
+}
+
+function displaySuggestions(villages) {
+    const villageInput = document.getElementById('village');
+    const suggestionsDiv = document.getElementById('village-suggestions');
+
+    // Build suggestions HTML
+    suggestionsDiv.innerHTML = villages.map(v =>
+        `<div class="suggestion-item" data-value="${v.name}" style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
+            ${v.name}
+        </div>`
+    ).join('');
+
+    suggestionsDiv.style.display = 'block';
+
+    // Add click handlers to suggestions
+    suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function() {
+            villageInput.value = this.dataset.value;
+            suggestionsDiv.style.display = 'none';
+        });
+    });
+}
+
 // Load initial cascading dropdowns on page load if values exist
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize campaign field visibility
@@ -674,6 +783,53 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleAwarenesscamp();
     });
 
+    // Add event listeners for BMI calculation
+    const heightField = document.getElementById('height');
+    const weightField = document.getElementById('weight');
+
+    if (heightField) {
+        heightField.addEventListener('change', calculateBMI);
+        heightField.addEventListener('input', calculateBMI);
+    }
+
+    if (weightField) {
+        weightField.addEventListener('change', calculateBMI);
+        weightField.addEventListener('input', calculateBMI);
+    }
+
+    // Calculate BMI on page load if values exist
+    calculateBMI();
+
+    // Village autocomplete setup
+    const villageInput = document.getElementById('village');
+    const talukaSelect = document.getElementById('taluka_id');
+    const suggestionsDiv = document.getElementById('village-suggestions');
+
+    // Load villages when taluka changes
+    talukaSelect.addEventListener('change', loadVillages);
+
+    // Show suggestions when typing
+    villageInput.addEventListener('input', function() {
+        clearTimeout(villageDebounceTimer);
+        villageDebounceTimer = setTimeout(() => {
+            showVillageSuggestions();
+        }, 300);
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== villageInput && e.target !== suggestionsDiv && !suggestionsDiv.contains(e.target)) {
+            suggestionsDiv.style.display = 'none';
+        }
+    });
+
+    // Show suggestions when focusing on input with text
+    villageInput.addEventListener('focus', function() {
+        if (this.value.length > 0) {
+            showVillageSuggestions();
+        }
+    });
+
     @if(old('country_id'))
         loadStates();
         setTimeout(() => {
@@ -687,6 +843,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         @if(old('taluka_id'))
                             setTimeout(() => {
                                 document.getElementById('taluka_id').value = '{{ old('taluka_id') }}';
+                                loadVillages();
                             }, 100);
                         @endif
                     @endif
@@ -696,5 +853,41 @@ document.addEventListener('DOMContentLoaded', function() {
     @endif
 });
 </script>
+
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Tom Select for multi-select fields
+    function initTomSelect(selectId, hiddenId, existingValues) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+
+        const items = existingValues ? existingValues.split(',').map(v => v.trim()).filter(v => v.length > 0) : [];
+
+        const ts = new TomSelect('#' + selectId, {
+            plugins: ['remove_button'],
+            delimiter: ',',
+            create: true,
+            createOnBlur: true,
+            items: items,
+            onChange: function(value) {
+                // Update hidden input with comma-separated values
+                document.getElementById(hiddenId).value = value;
+            }
+        });
+    }
+
+    // Initialize all three select fields
+    initTomSelect('complaints_select', 'complaints_hidden', '{{ old("complaints") }}');
+    initTomSelect('known_conditions_select', 'known_conditions_hidden', '{{ old("known_conditions") }}');
+    initTomSelect('diagnosis_select', 'diagnosis_hidden', '{{ old("diagnosis") }}');
+});
+</script>
+@endpush
 
 @endsection

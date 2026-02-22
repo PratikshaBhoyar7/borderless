@@ -12,15 +12,22 @@ class DataEntryUserSeeder extends Seeder
      * Run the database seeds.
      */
     public function run(): void
-    {
-        // Create a data entry user
-        $user = User::create([
+{
+    $user = User::updateOrCreate(
+        ['email' => 'dataentry@borderless.local'],
+        [
             'name' => 'Data Entry User',
-            'email' => 'dataentry@borderless.local',
-            'password' => Hash::make('password123'),
-        ]);
+            'password' => bcrypt('password'),
+        ]
+    );
 
-        // Attach data_entry role
-        $user->roles()->attach(\App\Models\Role::where('name', 'data_entry')->first());
+    $role = \App\Models\Role::where('name', 'data_entry')->first();
+
+    if ($role) {
+        $user->roles()->syncWithoutDetaching([$role->id]);
     }
 }
+
+        
+}
+
