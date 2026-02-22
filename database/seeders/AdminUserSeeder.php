@@ -8,18 +8,21 @@ use Illuminate\Database\Seeder;
 
 class AdminUserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@admin.com',
-            'password' => bcrypt('password'),
-        ]);
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@admin.com'], // check by email
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('password'),
+            ]
+        );
 
         $adminRole = Role::where('name', 'admin')->first();
-        $admin->roles()->attach($adminRole);
+
+        // attach role only if not already attached
+        if (!$admin->roles->contains($adminRole->id)) {
+            $admin->roles()->attach($adminRole);
+        }
     }
 }

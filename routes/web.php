@@ -13,6 +13,9 @@ use App\Http\Controllers\Admin\VillageController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\CampaignTypeController;
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\ComplaintController;
+use App\Http\Controllers\Admin\DiagnosisController;
+use App\Http\Controllers\Admin\KnownConditionController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,13 +92,36 @@ Route::prefix('admin')->middleware(['auth'])->name('admin.')->group(function () 
         ->middleware('permission:districts_view');
     Route::get('talukas/by-district/{district}', [TalukaController::class, 'getByDistrict'])
         ->middleware('permission:talukas_view');
+    Route::get('villages/by-taluka/{taluka}', [VillageController::class, 'getByTaluka'])
+        ->middleware('permission:villages_view');
+    Route::get('villages/search', [VillageController::class, 'search'])
+        ->middleware('permission:villages_view');
 
     // Campaign Types Management
     Route::resource('campaign-types', CampaignTypeController::class);
     Route::post('campaign-types/{campaignType}/restore', [CampaignTypeController::class, 'restore'])
         ->name('campaign-types.restore');
 
-    // Patient Management - Custom import routes (must be outside resource group)
+   Route::middleware(['permission:complaints_view|complaints_create|complaints_edit|complaints_delete'])
+    ->group(function () {
+        Route::resource('complaints', ComplaintController::class);
+    });
+
+  //Diagnosis Management
+
+        Route::middleware([
+            'permission:diagnoses_view|diagnoses_create|diagnoses_edit|diagnoses_delete'
+        ])->group(function () {
+            Route::resource('diagnoses', DiagnosisController::class);
+        });
+
+//Known Conditions
+            Route::middleware([
+            'permission:known_conditions_view|known_conditions_create|known_conditions_edit|known_conditions_delete'
+        ])->group(function () {
+            Route::resource('known-conditions', KnownConditionController::class);
+        });
+    // Patient Management - Custom import routes (must be inside resource group)
     Route::middleware('permission:patients_view,patients_create')->group(function () {
         Route::get('/patients/import-form', [PatientController::class, 'importForm'])->name('patients.import-form');
         Route::post('/patients/import', [PatientController::class, 'import'])->name('patients.import');

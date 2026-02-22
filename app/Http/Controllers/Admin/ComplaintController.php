@@ -12,7 +12,7 @@ class ComplaintController extends Controller
      */
    public function index()
     {
-        $complaints = Complaint::latest()->get();
+        $complaints = Complaint::latest()->paginate(10);
         return view('admin.complaints.index', compact('complaints'));
     }
 
@@ -21,7 +21,7 @@ class ComplaintController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.complaints.create');
     }
 
     /**
@@ -29,7 +29,13 @@ class ComplaintController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'complaint' => 'required|string|max:5000',
+        ]);
+
+        Complaint::create($validated);
+
+        return redirect()->route('admin.complaints.index')->with('success', 'Complaint created successfully.');
     }
 
     /**
@@ -43,24 +49,47 @@ class ComplaintController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Complaint $complaint)
-    {
-        //
-    }
+    public function edit($id)
+{
+    $complaint = Complaint::findOrFail($id);
+    return view('admin.complaints.edit', compact('complaint'));
+}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Complaint $complaint)
-    {
-        //
-    }
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'complaint' => 'required|string'
+    ]);
+
+    $complaint = Complaint::findOrFail($id);
+    $complaint->update([
+        'complaint' => $request->complaint
+    ]);
+
+    return redirect()
+        ->route('admin.complaints.index')
+        ->with('success', 'Complaint updated successfully.');
+}
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Complaint $complaint)
-    {
-        //
+   public function destroy($id)
+{
+    try {
+        $complaint = Complaint::findOrFail($id);
+        $complaint->delete();
+
+        return redirect()
+            ->route('admin.complaints.index')
+            ->with('success', 'Complaint deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()
+            ->route('admin.complaints.index')
+            ->with('error', 'Something went wrong while deleting.');
     }
+}
 }

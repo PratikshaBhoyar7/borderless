@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
             CampaignTypeSeeder::class,
             DataEntryUserSeeder::class,
             UserSeeder::class,
-            CampaignSeeder::class,
+            ComplaintSeeder::class,
+            DiagnosisSeeder::class,
+            KnownConditionSeeder::class,
         ]);
     }
 }

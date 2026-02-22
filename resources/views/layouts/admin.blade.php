@@ -203,6 +203,39 @@
                         </ul>
                     </li>
                 @endif
+
+                <!-- Complaints Management -->
+                @if(Auth::user()->hasPermission('complaints_view'))
+                    <li class="sidebar-menu-header">Complaints</li>
+                    <li>
+                        <a href="{{ route('admin.complaints.index') }}" class="{{ request()->routeIs('admin.complaints.*') ? 'active' : '' }}">
+                            <i class="bi bi-exclamation-triangle"></i><span> Complaints</span>
+                        </a>
+                    </li>
+                @endif
+
+                <!-- Diagnosis Management -->
+                @if(Auth::user()->hasPermission('diagnoses_view'))
+                    <li class="sidebar-menu-header">Diagnosis</li>
+                    <li>
+                        <a href="{{ route('admin.diagnoses.index') }}"
+                        class="{{ request()->routeIs('admin.diagnoses.*') ? 'active' : '' }}">
+                            <i class="bi bi-clipboard2-pulse"></i>
+                            <span> Diagnosis</span>
+                        </a>
+                    </li>
+                @endif
+
+                <!-- Known Conditions Management -->
+                @if(Auth::user()->hasPermission('known_conditions_view'))
+                    <li class="sidebar-menu-header">Known Conditions</li>
+                    <li>
+                        <a href="{{ route('admin.known-conditions.index') }}" class="{{ request()->routeIs('admin.known-conditions.*') ? 'active' : '' }}">
+                            <i class="bi bi-virus2"></i>
+                            <span>Known Conditions</span>
+                        </a>
+                    </li>
+                @endif
             </ul>
 
             <div class="sidebar-footer">  
