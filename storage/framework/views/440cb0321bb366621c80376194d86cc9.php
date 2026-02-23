@@ -12,7 +12,7 @@
 
 <div class="table-container">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="padding: 1.25rem 1.5rem;">
             <form method="POST" action="<?php echo e(route('admin.patients.update', $patient)); ?>" id="patientForm">
                 <?php echo csrf_field(); ?>
                 <?php echo method_field('PUT'); ?>
@@ -25,12 +25,12 @@
                 </div>
 
                 <!-- Basic Information Section -->
-                <h5 class="mb-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                <h5 class="mb-2" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                     <i class="bi bi-person-vcard"></i> Basic Information
                 </h5>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-2">
                         <label for="patient_name" class="form-label">Patient Name <span style="color: red;">*</span></label>
                         <input type="text" class="form-control <?php $__errorArgs = ['patient_name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -51,7 +51,54 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-3 mb-2">
+                        <label for="age" class="form-label">Age <span style="color: red;">*</span></label>
+                        <input type="number" class="form-control <?php $__errorArgs = ['age'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" id="age" name="age" value="<?php echo e(old('age', $patient->age)); ?>" min="0" max="150" required>
+                        <?php $__errorArgs = ['age'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="sex" class="form-label">Sex <span style="color: red;">*</span></label>
+                        <select class="form-select <?php $__errorArgs = ['sex'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" id="sex" name="sex" required>
+                            <option value="">-- Select --</option>
+                            <option value="Male" <?php echo e(old('sex', $patient->sex) == 'Male' ? 'selected' : ''); ?>>Male</option>
+                            <option value="Female" <?php echo e(old('sex', $patient->sex) == 'Female' ? 'selected' : ''); ?>>Female</option>
+                            <option value="Other" <?php echo e(old('sex', $patient->sex) == 'Other' ? 'selected' : ''); ?>>Other</option>
+                        </select>
+                        <?php $__errorArgs = ['sex'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    <div class="col-md-2 mb-2">
                         <label for="date" class="form-label">Date <span style="color: red;">*</span></label>
                         <input type="date" class="form-control <?php $__errorArgs = ['date'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -75,7 +122,7 @@ unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-6 mb-2">
                         <label for="campaign_type_id" class="form-label">Campaign Type</label>
                         <select class="form-select <?php $__errorArgs = ['campaign_type_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -106,84 +153,14 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label for="age" class="form-label">Age <span style="color: red;">*</span></label>
-                        <input type="number" class="form-control <?php $__errorArgs = ['age'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" id="age" name="age" value="<?php echo e(old('age', $patient->age)); ?>" min="0" max="150" required>
-                        <?php $__errorArgs = ['age'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                            <div class="invalid-feedback"><?php echo e($message); ?></div>
-                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="sex" class="form-label">Sex <span style="color: red;">*</span></label>
-                        <select class="form-select <?php $__errorArgs = ['sex'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" id="sex" name="sex" required>
-                            <option value="">-- Select --</option>
-                            <option value="Male" <?php echo e(old('sex', $patient->sex) == 'Male' ? 'selected' : ''); ?>>Male</option>
-                            <option value="Female" <?php echo e(old('sex', $patient->sex) == 'Female' ? 'selected' : ''); ?>>Female</option>
-                            <option value="Other" <?php echo e(old('sex', $patient->sex) == 'Other' ? 'selected' : ''); ?>>Other</option>
-                        </select>
-                        <?php $__errorArgs = ['sex'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                            <div class="invalid-feedback"><?php echo e($message); ?></div>
-                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                    </div>
-                </div>
-
                 <!-- Location Section -->
-                <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                     <i class="bi bi-map"></i> Location Details
                 </h5>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="village" class="form-label">Village <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control <?php $__errorArgs = ['village'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" id="village" name="village" value="<?php echo e(old('village', $patient->village)); ?>" required>
-                        <?php $__errorArgs = ['village'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                            <div class="invalid-feedback"><?php echo e($message); ?></div>
-                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                    </div>
-                    <div class="col-md-6 mb-3">
+                    
+                    <div class="col-md-3 mb-2">
                         <label for="country_id" class="form-label">Country</label>
                         <select class="form-select <?php $__errorArgs = ['country_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -193,7 +170,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="country_id" name="country_id" onchange="loadStates()">
-                            <option value="">-- Select Country --</option>
+                            <option value="">-- Select --</option>
                             <?php $__currentLoopData = $countries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $country): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($country->id); ?>" <?php echo e(old('country_id', $patient->country_id) == $country->id ? 'selected' : ''); ?>>
                                     <?php echo e($country->name); ?>
@@ -212,10 +189,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-2">
                         <label for="state_id" class="form-label">State</label>
                         <select class="form-select <?php $__errorArgs = ['state_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -225,7 +199,7 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="state_id" name="state_id" onchange="loadDistricts()">
-                            <option value="">-- Select State --</option>
+                            <option value="">-- Select --</option>
                         </select>
                         <?php $__errorArgs = ['state_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -238,7 +212,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-3 mb-2">
                         <label for="district_id" class="form-label">District</label>
                         <select class="form-select <?php $__errorArgs = ['district_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -248,32 +222,9 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" id="district_id" name="district_id" onchange="loadTalukas()">
-                            <option value="">-- Select District --</option>
+                            <option value="">-- Select --</option>
                         </select>
                         <?php $__errorArgs = ['district_id'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                            <div class="invalid-feedback"><?php echo e($message); ?></div>
-                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="taluka_id" class="form-label">Taluka</label>
-                        <select class="form-select <?php $__errorArgs = ['taluka_id'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" id="taluka_id" name="taluka_id">
-                            <option value="">-- Select Taluka --</option>
-                        </select>
-                        <?php $__errorArgs = ['taluka_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -287,8 +238,54 @@ unset($__errorArgs, $__bag); ?>
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="mobile" class="form-label">Mobile Number <span style="color: red;">*</span></label>
+                    <div class="col-md-3 mb-2">
+                        <label for="taluka_id" class="form-label">Taluka</label>
+                        <select class="form-select <?php $__errorArgs = ['taluka_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" id="taluka_id" name="taluka_id">
+                            <option value="">-- Select --</option>
+                        </select>
+                        <?php $__errorArgs = ['taluka_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+
+                    <div class="col-md-3 mb-2" style="position: relative;">
+                        <label for="village" class="form-label">Village <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control <?php $__errorArgs = ['village'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" id="village" name="village" value="<?php echo e(old('village', $patient->village)); ?>" required autocomplete="off" placeholder="Type to search...">
+                        <div id="village-suggestions" class="autocomplete-dropdown" style="display:none; position:absolute; z-index:1000; width:calc(100% - 0px); background:#fff; border:1px solid #ddd; border-top:none; border-radius:0 0 4px 4px; max-height:200px; overflow-y:auto;"></div>
+                        <?php $__errorArgs = ['village'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label for="mobile" class="form-label">Mobile <span style="color: red;">*</span></label>
                         <input type="text" class="form-control <?php $__errorArgs = ['mobile'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -296,7 +293,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" id="mobile" name="mobile" value="<?php echo e(old('mobile', $patient->mobile)); ?>" pattern="[0-9]{10}" placeholder="10-digit number" required>
+unset($__errorArgs, $__bag); ?>" id="mobile" name="mobile" value="<?php echo e(old('mobile', $patient->mobile)); ?>" pattern="[0-9]{10}" placeholder="10-digit">
                         <?php $__errorArgs = ['mobile'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -308,7 +305,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-5 mb-2">
                         <label for="aadhar" class="form-label">Aadhar Number</label>
                         <input type="text" class="form-control <?php $__errorArgs = ['aadhar'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -317,7 +314,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" id="aadhar" name="aadhar" value="<?php echo e(old('aadhar', $patient->aadhar)); ?>" pattern="[0-9]{12}" placeholder="12-digit number">
+unset($__errorArgs, $__bag); ?>" id="aadhar" name="aadhar" value="<?php echo e(old('aadhar', $patient->aadhar)); ?>" pattern="[0-9]{12}" placeholder="12-digit">
                         <?php $__errorArgs = ['aadhar'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -333,12 +330,12 @@ unset($__errorArgs, $__bag); ?>
 
                 <!-- Vital Signs Section -->
                 <div id="vital_signs_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-heart-pulse"></i> Vital Signs
                     </h5>
 
                     <div class="row">
-                        <div class="col-md-3 mb-3" id="height_field">
+                        <div class="col-md-3 mb-2" id="height_field">
                             <label for="height" class="form-label">Height (cm)</label>
                         <input type="number" step="0.1" class="form-control <?php $__errorArgs = ['height'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -359,7 +356,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    <div class="col-md-3 mb-3" id="weight_field">
+                    <div class="col-md-3 mb-2" id="weight_field">
                         <label for="weight" class="form-label">Weight (kg)</label>
                         <input type="number" step="0.1" class="form-control <?php $__errorArgs = ['weight'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -380,8 +377,8 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    <div class="col-md-3 mb-3" id="bp_field">
-                        <label for="bp" class="form-label">Blood Pressure</label>
+                    <div class="col-md-3 mb-2" id="bp_field">
+                        <label for="bp" class="form-label">BP</label>
                         <input type="text" class="form-control <?php $__errorArgs = ['bp'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -389,7 +386,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" id="bp" name="bp" value="<?php echo e(old('bp', $patient->bp)); ?>" placeholder="e.g., 120/80">
+unset($__errorArgs, $__bag); ?>" id="bp" name="bp" value="<?php echo e(old('bp', $patient->bp)); ?>" placeholder="120/80">
                         <?php $__errorArgs = ['bp'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -401,8 +398,8 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    <div class="col-md-3 mb-3" id="hb_field">
-                        <label for="hb" class="form-label">Hemoglobin (g/dL)</label>
+                    <div class="col-md-3 mb-2" id="hb_field">
+                        <label for="hb" class="form-label">HB (g/dL)</label>
                         <input type="number" step="0.1" class="form-control <?php $__errorArgs = ['hb'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -482,7 +479,7 @@ unset($__errorArgs, $__bag); ?>
 
                 <!-- Clinical Information Section -->
                 <div id="clinical_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-stethoscope"></i> Clinical Information
                     </h5>
 
@@ -639,7 +636,7 @@ unset($__errorArgs, $__bag); ?>
 
                 <!-- Treatment Section -->
                 <div id="treatment_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-pill"></i> Treatment
                     </h5>
 
@@ -690,7 +687,7 @@ unset($__errorArgs, $__bag); ?>
 
                 <!-- Lab & Referral Section -->
                 <div id="lab_referral_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-flask"></i> Lab Tests & Referral
                     </h5>
 
@@ -801,7 +798,7 @@ unset($__errorArgs, $__bag); ?>
 
                 <!-- Additional Notes -->
                 <div id="notes_section">
-                    <h5 class="mb-3 mt-4" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 10px;">
+                    <h5 class="mb-2 mt-3" style="color: #2e59a7; border-bottom: 2px solid #e3e6f0; padding-bottom: 8px; font-size: 0.95rem;">
                         <i class="bi bi-sticky"></i> Additional Notes
                     </h5>
 
@@ -1125,6 +1122,94 @@ function calculateBMI() {
     }
 }
 
+// Village autocomplete
+let villageCache = [];
+let villageDebounceTimer;
+
+function loadVillages() {
+    const talukaId = document.getElementById('taluka_id').value;
+    if (!talukaId) {
+        villageCache = [];
+        return;
+    }
+
+    fetch(`/admin/villages/by-taluka/${talukaId}`)
+        .then(response => response.json())
+        .then(data => {
+            villageCache = data;
+            console.log('Villages loaded for taluka:', data);
+            // If village field is focused and has input, show suggestions
+            const villageInput = document.getElementById('village');
+            if (document.activeElement === villageInput && villageInput.value.length > 0) {
+                showVillageSuggestions();
+            }
+        })
+        .catch(error => console.error('Error loading villages:', error));
+}
+
+function showVillageSuggestions() {
+    const villageInput = document.getElementById('village');
+    const suggestionsDiv = document.getElementById('village-suggestions');
+    const searchTerm = villageInput.value.toLowerCase().trim();
+
+    if (!searchTerm || searchTerm.length === 0) {
+        suggestionsDiv.style.display = 'none';
+        return;
+    }
+
+    const talukaId = document.getElementById('taluka_id').value;
+
+    // If taluka is selected, use cached villages; otherwise, use search API
+    if (talukaId && villageCache.length > 0) {
+        // Filter from cached villages
+        const matches = villageCache.filter(v =>
+            v.name.toLowerCase().includes(searchTerm)
+        );
+
+        if (matches.length === 0) {
+            suggestionsDiv.style.display = 'none';
+            return;
+        }
+
+        displaySuggestions(matches);
+    } else {
+        // Use search API for all villages or when cache is empty
+        fetch(`/admin/villages/search?q=${encodeURIComponent(searchTerm)}${talukaId ? '&taluka_id=' + talukaId : ''}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Search results:', data);
+                if (data.length === 0) {
+                    suggestionsDiv.style.display = 'none';
+                    return;
+                }
+                displaySuggestions(data);
+            })
+            .catch(error => console.error('Error searching villages:', error));
+    }
+}
+
+function displaySuggestions(villages) {
+    const villageInput = document.getElementById('village');
+    const suggestionsDiv = document.getElementById('village-suggestions');
+
+    // Build suggestions HTML
+    suggestionsDiv.innerHTML = villages.map(v =>
+        `<div class="suggestion-item" data-value="${v.name}" style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
+            ${v.name}
+        </div>`
+    ).join('');
+
+    suggestionsDiv.style.display = 'block';
+
+    // Add click handlers to suggestions
+    suggestionsDiv.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function() {
+            villageInput.value = this.dataset.value;
+            suggestionsDiv.style.display = 'none';
+        });
+    });
+}
+
 // Load initial cascading dropdowns on page load if values exist
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize campaign field visibility
@@ -1157,6 +1242,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // Calculate BMI on page load if values exist
     calculateBMI();
 
+    // Village autocomplete setup
+    const villageInput = document.getElementById('village');
+    const talukaSelect = document.getElementById('taluka_id');
+    const suggestionsDiv = document.getElementById('village-suggestions');
+
+    // Load villages when taluka changes
+    talukaSelect.addEventListener('change', loadVillages);
+
+    // Show suggestions when typing
+    villageInput.addEventListener('input', function() {
+        clearTimeout(villageDebounceTimer);
+        villageDebounceTimer = setTimeout(() => {
+            showVillageSuggestions();
+        }, 300);
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== villageInput && e.target !== suggestionsDiv && !suggestionsDiv.contains(e.target)) {
+            suggestionsDiv.style.display = 'none';
+        }
+    });
+
+    // Show suggestions when focusing on input with text
+    villageInput.addEventListener('focus', function() {
+        if (this.value.length > 0) {
+            showVillageSuggestions();
+        }
+    });
+
     <?php if($patient->country_id): ?>
         loadStates();
         setTimeout(() => {
@@ -1170,6 +1285,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <?php if($patient->taluka_id): ?>
                             setTimeout(() => {
                                 document.getElementById('taluka_id').value = '<?php echo e($patient->taluka_id); ?>';
+                                loadVillages();
                             }, 100);
                         <?php endif; ?>
                     <?php endif; ?>

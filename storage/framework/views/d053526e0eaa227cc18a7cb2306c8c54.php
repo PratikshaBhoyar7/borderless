@@ -150,28 +150,7 @@ unset($__errorArgs, $__bag); ?>
                 </h5>
 
                 <div class="row">
-                    <div class="col-md-3 mb-2" style="position: relative;">
-                        <label for="village" class="form-label">Village <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control <?php $__errorArgs = ['village'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>" id="village" name="village" value="<?php echo e(old('village')); ?>" required autocomplete="off" placeholder="Type to search...">
-                        <div id="village-suggestions" class="autocomplete-dropdown" style="display:none; position:absolute; z-index:1000; width:calc(100% - 0px); background:#fff; border:1px solid #ddd; border-top:none; border-radius:0 0 4px 4px; max-height:200px; overflow-y:auto;"></div>
-                        <?php $__errorArgs = ['village'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                            <div class="invalid-feedback"><?php echo e($message); ?></div>
-                        <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-                    </div>
+                   
                     <div class="col-md-3 mb-2">
                         <label for="country_id" class="form-label">Country</label>
                         <select class="form-select <?php $__errorArgs = ['country_id'];
@@ -263,6 +242,28 @@ unset($__errorArgs, $__bag); ?>" id="taluka_id" name="taluka_id">
                             <option value="">-- Select --</option>
                         </select>
                         <?php $__errorArgs = ['taluka_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <div class="invalid-feedback"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                     <div class="col-md-3 mb-2" style="position: relative;">
+                        <label for="village" class="form-label">Village <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control <?php $__errorArgs = ['village'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" id="village" name="village" value="<?php echo e(old('village')); ?>" required autocomplete="off" placeholder="Type to search...">
+                        <div id="village-suggestions" class="autocomplete-dropdown" style="display:none; position:absolute; z-index:1000; width:calc(100% - 0px); background:#fff; border:1px solid #ddd; border-top:none; border-radius:0 0 4px 4px; max-height:200px; overflow-y:auto;"></div>
+                        <?php $__errorArgs = ['village'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
