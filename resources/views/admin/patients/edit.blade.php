@@ -88,14 +88,7 @@
                 </h5>
 
                 <div class="row">
-                    <div class="col-md-3 mb-2" style="position: relative;">
-                        <label for="village" class="form-label">Village <span style="color: red;">*</span></label>
-                        <input type="text" class="form-control @error('village') is-invalid @enderror" id="village" name="village" value="{{ old('village', $patient->village) }}" required autocomplete="off" placeholder="Type to search...">
-                        <div id="village-suggestions" class="autocomplete-dropdown" style="display:none; position:absolute; z-index:1000; width:calc(100% - 0px); background:#fff; border:1px solid #ddd; border-top:none; border-radius:0 0 4px 4px; max-height:200px; overflow-y:auto;"></div>
-                        @error('village')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    
                     <div class="col-md-3 mb-2">
                         <label for="country_id" class="form-label">Country</label>
                         <select class="form-select @error('country_id') is-invalid @enderror" id="country_id" name="country_id" onchange="loadStates()">
@@ -137,6 +130,15 @@
                             <option value="">-- Select --</option>
                         </select>
                         @error('taluka_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-3 mb-2" style="position: relative;">
+                        <label for="village" class="form-label">Village <span style="color: red;">*</span></label>
+                        <input type="text" class="form-control @error('village') is-invalid @enderror" id="village" name="village" value="{{ old('village', $patient->village) }}" required autocomplete="off" placeholder="Type to search...">
+                        <div id="village-suggestions" class="autocomplete-dropdown" style="display:none; position:absolute; z-index:1000; width:calc(100% - 0px); background:#fff; border:1px solid #ddd; border-top:none; border-radius:0 0 4px 4px; max-height:200px; overflow-y:auto;"></div>
+                        @error('village')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
